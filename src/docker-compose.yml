@@ -19,3 +19,9 @@ services:
     build:
       context: .
       dockerfile: Web/WebMVC/Dockerfile
+
+  invest-test-service:
+    image: ${REGISTRY:-invest}/webmvc:${PLATFORM:-linux}-${TAG:-latest}
+    build:
+      context: .
+      dockerfile: Services/TestService/Dockerfile

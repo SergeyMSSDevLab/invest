@@ -1,15 +1,15 @@
-﻿using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using System.Threading.Tasks;
-using System;
-using WebMVC.Data;
-using Polly;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using MssDevLab.WebMVC.Data;
+using Polly;
+using System;
 using System.Linq;
+using System.Threading.Tasks;
 
-namespace WebMVC
+namespace MssDevLab.WebMVC
 {
     public class SeedData
     {

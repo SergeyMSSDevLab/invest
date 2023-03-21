@@ -4,14 +4,13 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Serilog.Sinks.Elasticsearch;
+using MssDevLab.WebMVC.Data;
 using Serilog;
+using Serilog.Sinks.Elasticsearch;
 using System;
 using System.Reflection;
-using System.Threading.Tasks;
-using WebMVC.Data;
 
-namespace WebMVC
+namespace MssDevLab.WebMVC
 {
     public class Program
     {

@@ -1,4 +1,4 @@
-namespace WebMVC.Models
+namespace MssDevLab.WebMVC.Models
 {
     public class ErrorViewModel
     {

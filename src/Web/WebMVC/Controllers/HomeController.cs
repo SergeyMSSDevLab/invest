@@ -1,10 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using MssDevLab.WebMVC.Models;
 using System;
 using System.Diagnostics;
-using WebMVC.Models;
 
-namespace WebMVC.Controllers
+namespace MssDevLab.WebMVC.Controllers
 {
     public class HomeController : Controller
     {

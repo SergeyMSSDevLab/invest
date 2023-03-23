@@ -48,11 +48,11 @@ namespace MssDevLab.TestService
 			        optional: true)
 		        .Build();
 
-            var uriSink = new Uri(configuration["ElasticConfiguration:Uri"] ?? "http://invest-ek:9200");
+            var uriSink = new Uri(configuration["ElasticConfiguration:Uri"] ?? "http://mssproto-ek:9200");
 	        var elSinkOptions =  new ElasticsearchSinkOptions(uriSink)
 	        {
 		        AutoRegisterTemplate = true,
-		        IndexFormat = $"invest-{Assembly.GetExecutingAssembly().GetName().Name?.ToLower().Replace(".", "-")}-{environment.ToLower().Replace(".", "-")}-{DateTime.UtcNow:yyyy-MM}"
+		        IndexFormat = $"mssproto-{Assembly.GetExecutingAssembly().GetName().Name?.ToLower().Replace(".", "-")}-{environment.ToLower().Replace(".", "-")}-{DateTime.UtcNow:yyyy-MM}"
 	        };
 
 	        var loggerConfig = new LoggerConfiguration()

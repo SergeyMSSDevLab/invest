@@ -10,13 +10,13 @@ WORKDIR /src
 
 # It's important to keep lines from here down to "COPY . ." identical in all Dockerfiles
 # to take advantage of Docker's build cache, to speed up local container builds
-COPY "Invest.sln" "Invest.sln"
+COPY "mssproto.sln" "mssproto.sln"
 
 COPY "Web/WebMVC/WebMVC.csproj" "Web/WebMVC/WebMVC.csproj"
 
 COPY "docker-compose.dcproj" "docker-compose.dcproj"
 
-RUN dotnet restore "Invest.sln"
+RUN dotnet restore "mssproto.sln"
 
 COPY . .
 WORKDIR /src/Web/WebMVC

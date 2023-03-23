@@ -2,7 +2,7 @@ version: '0.0'
 
 services:
 
-  invest-ek:
+  mssproto-ek:
     environment:
       - xpack.monitoring.enabled=true
       - xpack.watcher.enabled=false
@@ -12,21 +12,21 @@ services:
       - "6601:5601"
       - "9200:9200"
 
-  invest-rabbitmq:
+  mssproto-rabbitmq:
     ports:
       - "15672:15672"
       - "5672:5672"
 
-  invest-sqldb:
+  mssproto-sqldb:
     environment:
       - SA_PASSWORD=Pass@word
       - ACCEPT_EULA=Y
     ports:
       - "1433:1433"
     volumes:
-      - invest-sqldata:/var/opt/mssql
+      - mssproto-sqldata:/var/opt/mssql
 
-  invest-fe:
+  mssproto-fe:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://0.0.0.0:80
@@ -38,9 +38,9 @@ services:
       - "6080:80"
       - "6443:443"
     depends_on:  
-      - invest-sqldb
+      - mssproto-sqldb
 
-  invest-test-service:
+  mssproto-test-service:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://0.0.0.0:80
@@ -52,5 +52,5 @@ services:
       - "6081:80"
 
 volumes:
-  invest-sqldata:
+  mssproto-sqldata:
     external: false

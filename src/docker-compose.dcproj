@@ -8,7 +8,7 @@
     <DockerTargetOS>Linux</DockerTargetOS>
     <ProjectVersion>2.1</ProjectVersion>
     <DockerLaunchAction>LaunchBrowser</DockerLaunchAction>
-    <DockerComposeProjectName>invest</DockerComposeProjectName>
+    <DockerComposeProjectName>mssproto</DockerComposeProjectName>
   </PropertyGroup>
   <ItemGroup>
     <None Include=".dockerignore" />

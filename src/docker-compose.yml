@@ -2,26 +2,26 @@ version: '0.0'
 
 services:
   
-  invest-ek:
-    container_name: invest-ek
+  mssproto-ek:
+    container_name: mssproto-ek
     image: nshou/elasticsearch-kibana:latest
 
-  invest-rabbitmq:
-    container_name: invest-rabbitmq
+  mssproto-rabbitmq:
+    container_name: mssproto-rabbitmq
     image: masstransit/rabbitmq
 
-  invest-sqldb:
-    container_name: invest-sqldb
+  mssproto-sqldb:
+    container_name: mssproto-sqldb
     image: mcr.microsoft.com/mssql/server:2019-latest 
 
-  invest-fe:
-    image: ${REGISTRY:-invest}/webmvc:${PLATFORM:-linux}-${TAG:-latest}
+  mssproto-fe:
+    image: ${REGISTRY:-mssproto}/webmvc:${PLATFORM:-linux}-${TAG:-latest}
     build:
       context: .
       dockerfile: Web/WebMVC/Dockerfile
 
-  invest-test-service:
-    image: ${REGISTRY:-invest}/webmvc:${PLATFORM:-linux}-${TAG:-latest}
+  mssproto-test-service:
+    image: ${REGISTRY:-mssproto}/webmvc:${PLATFORM:-linux}-${TAG:-latest}
     build:
       context: .
       dockerfile: Services/TestService/Dockerfile

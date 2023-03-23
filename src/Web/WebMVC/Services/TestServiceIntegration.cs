@@ -1,5 +1,5 @@
-﻿using MssDevLab.Common.Http;
-using Serilog;
+﻿using Microsoft.Extensions.Logging;
+using MssDevLab.Common.Http;
 using System;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -14,7 +14,7 @@ namespace MssDevLab.WebMVC.Services
 
         protected override ILogger Log => _logger;
 
-        public TestServiceIntegration(ILogger logger)
+        public TestServiceIntegration(ILogger<TestServiceIntegration> logger)
         {
             _logger = logger;
         }
@@ -38,7 +38,7 @@ namespace MssDevLab.WebMVC.Services
 
             httpClient.Timeout = timeOut ?? TimeSpan.FromMilliseconds(OneMinuteInMilliseconds);
 
-            string baseUrl = "http://replace_the_url_from_settings.com";
+            string baseUrl = "http://mssproto-test-service";
             if (string.IsNullOrWhiteSpace(baseUrl))
             {
                 throw new ArgumentNullException(nameof(baseUrl));
@@ -57,7 +57,7 @@ namespace MssDevLab.WebMVC.Services
             //httpClient.DefaultRequestHeaders.Authorization =
             //    new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", Convert.ToBase64String(byteArray));
 
-            Log.Debug($"HttpClient created, base address: '{baseUrl}'");
+            Log.LogDebug($"HttpClient created, base address: '{baseUrl}'");
             return httpClient;
         }
     }

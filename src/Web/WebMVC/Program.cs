@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using MssDevLab.Common.Extensions;
 using MssDevLab.WebMVC.Data;
+using MssDevLab.WebMVC.Services;
 using System;
 
 namespace MssDevLab.WebMVC
@@ -27,6 +28,9 @@ namespace MssDevLab.WebMVC
             builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             builder.Services.AddControllersWithViews();
+
+            builder.Services.AddTransient<ITestServiceIntegration, TestServiceIntegration>();
+
 
             var app = builder.Build();
 

@@ -10,7 +10,7 @@ namespace MssDevLab.Common.Extensions
     {
         public static IHostBuilder ConfigureElasticSerilog(this IHostBuilder builder, string moduleName)
         {
-            	        var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Development";
+            var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Development";
 	        var configuration = new ConfigurationBuilder()
 		        .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
 		        .AddJsonFile(

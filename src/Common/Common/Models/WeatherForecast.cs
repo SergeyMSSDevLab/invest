@@ -1,4 +1,4 @@
-namespace MssDevLab.TestService
+namespace MssDevLab.Common.Models
 {
     public class WeatherForecast
     {

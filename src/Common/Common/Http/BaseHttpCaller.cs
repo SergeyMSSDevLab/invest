@@ -1,8 +1,8 @@
-﻿using MssDevLab.Common.Helpers;
+﻿using Microsoft.Extensions.Logging;
+using MssDevLab.Common.Helpers;
 using MssDevLab.CommonCore.Interfaces.Http;
 using MssDevLab.CommonCore.Services;
 using Newtonsoft.Json;
-using Serilog;
 using System.Diagnostics;
 using System.Net.Http.Formatting;
 using System.Net.Http.Json;
@@ -281,7 +281,7 @@ namespace MssDevLab.Common.Http
 
         public async Task<ICallerResult<TReturn>> PutAsync<T, TReturn>(string restApiPath, T entity, [System.Runtime.CompilerServices.CallerMemberName] string callerName = "") where T : class
         {
-            Log.Information($"PutAsync called for: '{restApiPath}'");
+            Log.LogInformation($"PutAsync called for: '{restApiPath}'");
             await EnsureHttpClientAsync(null).ConfigureAwait(false);
 
             return await GetResponseAsync<TReturn, T>((e) => _client.PutAsJsonAsync(restApiPath, e), entity, callerName).ConfigureAwait(false);
@@ -293,33 +293,33 @@ namespace MssDevLab.Common.Http
 
         private void LogInformation(string message)
         {
-            Log.Information(message);
+            Log.LogInformation(message);
         }
 
         private void LogDebug(string message)
         {
-                Log.Debug(message);
+                Log.LogDebug(message);
         }
 
         private void LogDebug(string message, object data)
         {
             var text = $"{message}: {JsonConvert.SerializeObject(data)}";
-            Log.Debug(text);
+            Log.LogDebug(text);
         }
 
         private void LogError(string message)
         {
-            Log.Error(message);
+            Log.LogError(message);
         }
 
         private void LogError(string message, object data)
         {
-            Log.Error(message + JsonHelper.GetJson(data));
+            Log.LogError(message + JsonHelper.GetJson(data));
         }
 
         private void LogError(string message, Exception exception)
         {
-            Log.Error(message, exception);
+            Log.LogError(message, exception);
         }
 
         private void LogErrorPossiblePersonalData(string message, object possiblePersonalDataObject)

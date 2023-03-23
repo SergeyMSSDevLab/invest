@@ -13,13 +13,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebMVC", "Web\WebMVC\WebMVC
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{D0D36F70-3786-4532-8883-AA7C2600AAFC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestService", "Services\TestService\TestService.csproj", "{EAF32EB3-62E8-44A5-B66A-B60FD91FE6D4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestService", "Services\TestService\TestService.csproj", "{EAF32EB3-62E8-44A5-B66A-B60FD91FE6D4}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services", "Services", "{305286EA-BFFC-4054-9188-8D86363264CF}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Common", "Common", "{9B900BF5-6743-4FF9-939B-229D8FABE383}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommonCore", "Common\CommonCore\CommonCore.csproj", "{45106BD4-A5AB-4C26-9B87-504316D0F4EB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommonCore", "Common\CommonCore\CommonCore.csproj", "{45106BD4-A5AB-4C26-9B87-504316D0F4EB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common", "Common\Common\Common.csproj", "{02E03835-36CA-4345-AB4A-14FA6E6FB863}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -43,6 +45,10 @@ Global
 		{45106BD4-A5AB-4C26-9B87-504316D0F4EB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{45106BD4-A5AB-4C26-9B87-504316D0F4EB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{45106BD4-A5AB-4C26-9B87-504316D0F4EB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{02E03835-36CA-4345-AB4A-14FA6E6FB863}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{02E03835-36CA-4345-AB4A-14FA6E6FB863}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{02E03835-36CA-4345-AB4A-14FA6E6FB863}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{02E03835-36CA-4345-AB4A-14FA6E6FB863}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -54,6 +60,7 @@ Global
 		{305286EA-BFFC-4054-9188-8D86363264CF} = {F01DE11D-731E-4A91-8295-6E31FE1650BF}
 		{9B900BF5-6743-4FF9-939B-229D8FABE383} = {F01DE11D-731E-4A91-8295-6E31FE1650BF}
 		{45106BD4-A5AB-4C26-9B87-504316D0F4EB} = {9B900BF5-6743-4FF9-939B-229D8FABE383}
+		{02E03835-36CA-4345-AB4A-14FA6E6FB863} = {9B900BF5-6743-4FF9-939B-229D8FABE383}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {12DCEBDA-BC76-4444-B250-F3E855BC7E86}

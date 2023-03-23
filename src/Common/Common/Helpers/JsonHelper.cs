@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 
-namespace Common.Helpers
+namespace MssDevLab.Common.Helpers
 {
     public static class JsonHelper
     {

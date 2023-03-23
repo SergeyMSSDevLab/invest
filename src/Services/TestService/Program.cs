@@ -2,6 +2,7 @@
 using Serilog;
 using Serilog.Sinks.Elasticsearch;
 using System.Reflection;
+using MssDevLab.Common.Extensions;
 
 namespace MssDevLab.TestService
 {
@@ -9,10 +10,8 @@ namespace MssDevLab.TestService
     {
         public static void Main(string[] args)
         {
-            ConfigureLogging();
-
             var builder = WebApplication.CreateBuilder(args);
-            builder.Host.UseSerilog();
+            builder.Host.ConfigureElasticSerilog("TestService");
 
             // Add services to the container.
 
@@ -36,34 +35,6 @@ namespace MssDevLab.TestService
             app.MapControllers();
 
             app.Run();
-        }
-
-        private static void ConfigureLogging()
-        {
-	        var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Development";
-	        var configuration = new ConfigurationBuilder()
-		        .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-		        .AddJsonFile(
-			        $"appsettings.{environment}.json",
-			        optional: true)
-		        .Build();
-
-            var uriSink = new Uri(configuration["ElasticConfiguration:Uri"] ?? "http://mssproto-ek:9200");
-	        var elSinkOptions =  new ElasticsearchSinkOptions(uriSink)
-	        {
-		        AutoRegisterTemplate = true,
-		        IndexFormat = $"mssproto-{Assembly.GetExecutingAssembly().GetName().Name?.ToLower().Replace(".", "-")}-{environment.ToLower().Replace(".", "-")}-{DateTime.UtcNow:yyyy-MM}"
-	        };
-
-	        var loggerConfig = new LoggerConfiguration()
-		        .Enrich.FromLogContext()
-		        .Enrich.WithMachineName()
-		        .WriteTo.Debug()
-		        .WriteTo.Console()
-		        .WriteTo.Elasticsearch(elSinkOptions)
-		        .Enrich.WithProperty("Environment", environment)
-		        .ReadFrom.Configuration(configuration);
-            Log.Logger = loggerConfig.CreateLogger();
         }
     }
 }

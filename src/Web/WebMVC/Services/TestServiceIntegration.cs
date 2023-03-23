@@ -1,10 +1,8 @@
-﻿using System.Net.Http;
-using System.Net;
-using System.Text;
-using System.Threading.Tasks;
-using System;
-using Common.Http;
+﻿using MssDevLab.Common.Http;
 using Serilog;
+using System;
+using System.Net.Http;
+using System.Threading.Tasks;
 
 namespace MssDevLab.WebMVC.Services
 {

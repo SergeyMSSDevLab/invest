@@ -1,18 +1,13 @@
-﻿using Common.Helpers;
+﻿using MssDevLab.Common.Helpers;
 using MssDevLab.CommonCore.Interfaces.Http;
 using MssDevLab.CommonCore.Services;
 using Newtonsoft.Json;
 using Serilog;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Net.Http.Formatting;
 using System.Net.Http.Json;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Common.Http
+namespace MssDevLab.Common.Http
 {
     public abstract class BaseHttpCaller : IHttpCaller
     {

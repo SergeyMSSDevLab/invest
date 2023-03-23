@@ -1,7 +1,7 @@
 ﻿using MssDevLab.CommonCore.Interfaces.Http;
 using System.Net;
 
-namespace Common.Http
+namespace MssDevLab.Common.Http
 {
     internal class HttpCallerResult<T> : ICallerResult<T>
     {

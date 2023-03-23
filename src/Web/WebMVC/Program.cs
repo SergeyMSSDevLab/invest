@@ -4,11 +4,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using MssDevLab.Common.Extensions;
 using MssDevLab.WebMVC.Data;
-using Serilog;
-using Serilog.Sinks.Elasticsearch;
 using System;
-using System.Reflection;
 
 namespace MssDevLab.WebMVC
 {
@@ -16,10 +14,8 @@ namespace MssDevLab.WebMVC
     {
         public static /*async Task*/ void Main(string[] args)
         {
-            ConfigureLogging();
-
-            var builder = WebApplication.CreateBuilder(args);
-            builder.Host.UseSerilog();
+            WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
+            builder.Host.ConfigureElasticSerilog("WebMVC");
 
             // Add services to the container.
             var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
@@ -67,34 +63,6 @@ namespace MssDevLab.WebMVC
             //}
 
             app.Run();
-        }
-
-        private static void ConfigureLogging()
-        {
-	        var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Development";
-	        var configuration = new ConfigurationBuilder()
-		        .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-		        .AddJsonFile(
-			        $"appsettings.{environment}.json",
-			        optional: true)
-		        .Build();
-
-            var uriSink = new Uri(configuration["ElasticConfiguration:Uri"] ?? "http://mssproto-ek:9200");
-	        var elSinkOptions =  new ElasticsearchSinkOptions(uriSink)
-	        {
-		        AutoRegisterTemplate = true,
-		        IndexFormat = $"mssproto-{Assembly.GetExecutingAssembly().GetName().Name?.ToLower().Replace(".", "-")}-{environment.ToLower().Replace(".", "-")}-{DateTime.UtcNow:yyyy-MM}"
-	        };
-
-	        var loggerConfig = new LoggerConfiguration()
-		        .Enrich.FromLogContext()
-		        .Enrich.WithMachineName()
-		        .WriteTo.Debug()
-		        .WriteTo.Console()
-		        .WriteTo.Elasticsearch(elSinkOptions)
-		        .Enrich.WithProperty("Environment", environment)
-		        .ReadFrom.Configuration(configuration);
-            Log.Logger = loggerConfig.CreateLogger();
         }
     }
 }

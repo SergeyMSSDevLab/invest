@@ -42,12 +42,10 @@ namespace MssDevLab.Common.Http
             LogInformation($"DeleteAsync called for: '{restApiPath}'");
             await EnsureHttpClientAsync(null);
 
-            using (HttpResponseMessage response = await _client.DeleteAsync(restApiPath))
-            {
-                LogDebug($"DeleteAsync finished with status code: '{response.StatusCode}'");
+            using HttpResponseMessage response = await _client.DeleteAsync(restApiPath);
+            LogDebug($"DeleteAsync finished with status code: '{response.StatusCode}'");
 
-                return response.IsSuccessStatusCode;
-            }
+            return response.IsSuccessStatusCode;
         }
 
         public async Task<ICallerResult<T>> GetAsync<T>(string restApiPath, [System.Runtime.CompilerServices.CallerMemberName] string callerName = "")
@@ -275,7 +273,7 @@ namespace MssDevLab.Common.Http
 
         public async Task<ICallerResult<TReturn>> PutAsync<T, TReturn>(string restApiPath, T entity, [System.Runtime.CompilerServices.CallerMemberName] string callerName = "") where T : class
         {
-            Log.LogInformation($"PutAsync called for: '{restApiPath}'");
+            Log.LogInformation("PutAsync called for: '{restApiPath}'", restApiPath);
             await EnsureHttpClientAsync(null).ConfigureAwait(false);
 
             return await GetResponseAsync<TReturn, T>((e) => _client.PutAsJsonAsync(restApiPath, e), entity, callerName).ConfigureAwait(false);
@@ -287,12 +285,12 @@ namespace MssDevLab.Common.Http
 
         private void LogInformation(string message)
         {
-            Log.LogInformation(message);
+            Log.LogInformation("{message}", message);
         }
 
         private void LogDebug(string message)
         {
-                Log.LogDebug(message);
+                Log.LogDebug("{message}", message);
         }
 
         private void LogDebug(string message, object? data)
@@ -306,29 +304,29 @@ namespace MssDevLab.Common.Http
             {
                 text = $"{message}";
             }
-            Log.LogDebug(text);
+            Log.LogDebug("{text}", text);
         }
 
         private void LogError(string message)
         {
-            Log.LogError(message);
+            Log.LogError("{message}", message);
         }
 
         private void LogError(string message, object? data)
         {
             if (data != null)
             {
-                Log.LogError(message + JsonHelper.GetJson(data));
+                Log.LogError("{message}", message + JsonHelper.GetJson(data));
             }
             else
             {
-                Log.LogError(message);
+                Log.LogError("{message}", message);
             }
         }
 
         private void LogError(string message, Exception exception)
         {
-            Log.LogError(message, exception);
+            Log.LogError(exception, "{message}", message);
         }
 
         private void LogErrorPossiblePersonalData(string message, object? possiblePersonalDataObject)

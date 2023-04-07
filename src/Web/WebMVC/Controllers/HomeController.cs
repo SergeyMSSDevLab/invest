@@ -24,8 +24,8 @@ namespace MssDevLab.WebMVC.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var items = await _testService.GetAsync<IEnumerable<WeatherForecast>>("WeatherForecast", "homeController");
-            _logger.LogInformation($"HomeController gets items from test service status code:{items.StatusCode}, items:{items.Result.Count()}", DateTime.UtcNow);
+            var items = await _testService.GetAsync<IEnumerable<ServiceData>>("WeatherForecast", "homeController");
+            _logger.LogInformation("HomeController gets items from test service status code:{StatusCode}, items:{itemsCount}", items.StatusCode, items.Result?.Count());
             return View();
         }
 

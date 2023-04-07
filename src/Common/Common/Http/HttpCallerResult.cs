@@ -5,7 +5,7 @@ namespace MssDevLab.Common.Http
 {
     internal class HttpCallerResult<T> : ICallerResult<T>
     {
-        public HttpCallerResult(HttpResponseMessage response, T result)
+        public HttpCallerResult(HttpResponseMessage response, T? result)
         {
             StatusCode = response.StatusCode;
             Result = result;
@@ -15,7 +15,7 @@ namespace MssDevLab.Common.Http
 
         public HttpStatusCode StatusCode { get; }
 
-        public T Result { get; }
+        public T? Result { get; }
 
         public bool IsSuccessCode { get; }
 

@@ -11,7 +11,9 @@ namespace MssDevLab.Common.Http
 {
     public abstract class BaseHttpCaller : IHttpCaller
     {
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         private HttpClient _client;
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
         private const int TooLongCallThresholdMilliseconds = 2000;
 
@@ -22,14 +24,6 @@ namespace MssDevLab.Common.Http
             if (_client == null || HttpClientExpired)
             {
                 _client = await CreateHttpClientAsync(timeOut);
-            }
-        }
-
-        private void EnsureHttpClient(TimeSpan? timeOut)
-        {
-            if (_client == null || HttpClientExpired)
-            {
-                _client = CreateHttpClient(timeOut);
             }
         }
 
@@ -84,7 +78,7 @@ namespace MssDevLab.Common.Http
                 var result = default(string);
                 if (response.IsSuccessStatusCode)
                 {
-                    result = await response.Content?.ReadAsStringAsync();
+                    result = await response.Content.ReadAsStringAsync();
                 }
                 returnValue = new HttpCallerResult<string>(response, result);
             }
@@ -151,8 +145,8 @@ namespace MssDevLab.Common.Http
         }
 
         private async Task<ICallerResult<TReturn>> GetResponseAsync<TReturn, TSend>(
-            Func<TSend, Task<HttpResponseMessage>> callFunc,
-            TSend entity,
+            Func<TSend?, Task<HttpResponseMessage>> callFunc,
+            TSend? entity,
             string methodName)
         {
             LogDebugPossiblePersonalData($"{methodName} sends object:", entity);
@@ -226,7 +220,7 @@ namespace MssDevLab.Common.Http
                     throw new ServiceException("HttpClient returns null");
                 }
 
-                string result = null;
+                string? result = null;
 
                 if (response.IsSuccessStatusCode && response.Content!=null)
                 {
@@ -301,9 +295,17 @@ namespace MssDevLab.Common.Http
                 Log.LogDebug(message);
         }
 
-        private void LogDebug(string message, object data)
+        private void LogDebug(string message, object? data)
         {
-            var text = $"{message}: {JsonConvert.SerializeObject(data)}";
+            string text;
+            if (data != null)
+            {
+                text = $"{message}: {JsonConvert.SerializeObject(data)}";
+            }
+            else
+            {
+                text = $"{message}";
+            }
             Log.LogDebug(text);
         }
 
@@ -312,9 +314,16 @@ namespace MssDevLab.Common.Http
             Log.LogError(message);
         }
 
-        private void LogError(string message, object data)
+        private void LogError(string message, object? data)
         {
-            Log.LogError(message + JsonHelper.GetJson(data));
+            if (data != null)
+            {
+                Log.LogError(message + JsonHelper.GetJson(data));
+            }
+            else
+            {
+                Log.LogError(message);
+            }
         }
 
         private void LogError(string message, Exception exception)
@@ -322,7 +331,7 @@ namespace MssDevLab.Common.Http
             Log.LogError(message, exception);
         }
 
-        private void LogErrorPossiblePersonalData(string message, object possiblePersonalDataObject)
+        private void LogErrorPossiblePersonalData(string message, object? possiblePersonalDataObject)
         {
 	        if (RequestLogging)
 	        {
@@ -333,7 +342,7 @@ namespace MssDevLab.Common.Http
 	        LogError(message + IsRequestDataLoggingEnabled);
         }
 
-        private void LogDebugPossiblePersonalData(string message, object possiblePersonalDataObject)
+        private void LogDebugPossiblePersonalData(string message, object? possiblePersonalDataObject)
         {
 	        if (RequestLogging)
 	        {

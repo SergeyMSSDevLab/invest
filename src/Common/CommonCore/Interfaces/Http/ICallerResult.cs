@@ -2,6 +2,6 @@
 {
     public interface ICallerResult<T> : IHttpCallerResult
     {
-        T Result { get; }
+        T? Result { get; }
     }
 }

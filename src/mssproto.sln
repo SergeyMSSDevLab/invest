@@ -21,7 +21,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Common", "Common", "{9B900B
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommonCore", "Common\CommonCore\CommonCore.csproj", "{45106BD4-A5AB-4C26-9B87-504316D0F4EB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common", "Common\Common\Common.csproj", "{02E03835-36CA-4345-AB4A-14FA6E6FB863}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common", "Common\Common\Common.csproj", "{02E03835-36CA-4345-AB4A-14FA6E6FB863}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestAdService", "Services\TestAdService\TestAdService.csproj", "{F8A93837-F68D-4946-9BF3-5378460C4A04}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -49,6 +51,10 @@ Global
 		{02E03835-36CA-4345-AB4A-14FA6E6FB863}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{02E03835-36CA-4345-AB4A-14FA6E6FB863}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{02E03835-36CA-4345-AB4A-14FA6E6FB863}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F8A93837-F68D-4946-9BF3-5378460C4A04}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F8A93837-F68D-4946-9BF3-5378460C4A04}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F8A93837-F68D-4946-9BF3-5378460C4A04}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F8A93837-F68D-4946-9BF3-5378460C4A04}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -61,6 +67,7 @@ Global
 		{9B900BF5-6743-4FF9-939B-229D8FABE383} = {F01DE11D-731E-4A91-8295-6E31FE1650BF}
 		{45106BD4-A5AB-4C26-9B87-504316D0F4EB} = {9B900BF5-6743-4FF9-939B-229D8FABE383}
 		{02E03835-36CA-4345-AB4A-14FA6E6FB863} = {9B900BF5-6743-4FF9-939B-229D8FABE383}
+		{F8A93837-F68D-4946-9BF3-5378460C4A04} = {305286EA-BFFC-4054-9188-8D86363264CF}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {12DCEBDA-BC76-4444-B250-F3E855BC7E86}

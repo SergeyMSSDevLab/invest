@@ -8,8 +8,9 @@ namespace MssDevLab.Common.Models
 {
     public enum ServiceType
     {
-        None = 0,
-        TestService = 1,
-        TestService1 = 2
+        Unknown = 0,
+        AdService = 1,
+        TestService = 2,
+        TestService1 = 3
     }
 }

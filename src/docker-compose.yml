@@ -25,3 +25,9 @@ services:
     build:
       context: .
       dockerfile: Services/TestService/Dockerfile
+
+  mssproto-test-ad-service:
+    image: ${REGISTRY:-mssproto}/webmvc:${PLATFORM:-linux}-${TAG:-latest}
+    build:
+      context: .
+      dockerfile: Services/TestAdService/Dockerfile

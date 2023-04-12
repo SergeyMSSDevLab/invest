@@ -32,6 +32,13 @@ namespace MssDevLab.WebMVC.Controllers
                 QueryString = string.Empty,
                 UserPreferences = null
             };
+
+            var userName = User?.Identity?.Name;
+            if (!string.IsNullOrWhiteSpace(userName))
+            {
+                serviceRequest.UserPreferences = new UserData { Email = userName };
+            }
+
             var adsResponse = await _testAdService.FetchAds(serviceRequest);
             _logger.LogInformation("HomeController gets items from test ad service. Items:{itemsCount}", adsResponse?.Items?.Count());
             

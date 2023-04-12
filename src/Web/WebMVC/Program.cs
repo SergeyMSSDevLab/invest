@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -29,7 +30,7 @@ namespace MssDevLab.WebMVC
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             builder.Services.AddControllersWithViews();
 
-            builder.Services.AddTransient<ITestServiceIntegration, TestServiceIntegration>();
+            AddHttpClientServices(builder);
 
 
             var app = builder.Build();
@@ -68,5 +69,13 @@ namespace MssDevLab.WebMVC
 
             app.Run();
         }
+        
+        // Adds all Http client services
+        static void AddHttpClientServices(WebApplicationBuilder builder)
+        {
+            builder.Services.AddHttpClient<ITestServiceIntegration, TestServiceIntegration>();
+            builder.Services.AddHttpClient<ITestAdServiceIntegration, TestAdServiceIntegration>();
+        }
+
     }
 }

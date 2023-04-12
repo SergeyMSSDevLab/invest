@@ -7,6 +7,6 @@ namespace MssDevLab.Common.Models
         public string? Description { get; set; }
         public ServiceType Type { get; set; }
         public string? Url { get; set; }
-        public int PageCount { get; set; }
+        public string? ImageUrl { get; set;}
     }
 }

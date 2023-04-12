@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 
 namespace MssDevLab.Common.Models
 {
-    public class ServiceRequest
+    public class ServiceResponse
     {
+        public IEnumerable<ServiceData>? Items { get; set; }
         public string? QueryString { get; set; }
         public int PageNumber { get; set; }
-        public int PageSize { get; set; } = 10;
-
-        public UserData? UserPreferences { get; set; }
+        public int PageSize { get; set; }
+        public int? ItemsAmount { get; set; }
     }
 }

@@ -2,7 +2,7 @@
 
 namespace MssDevLab.WebMVC.Services
 {
-    public interface ITestServiceIntegration : IHttpCaller
+    public interface ITestServiceIntegration
     {
     }
 }

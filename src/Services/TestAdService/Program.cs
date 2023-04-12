@@ -11,7 +11,7 @@ namespace MssDevLab.TestAdService
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
-            builder.Host.ConfigureElasticSerilog("TestService");
+            builder.Host.ConfigureElasticSerilog("TestAdService");
 
             // Add services to the container.
 
@@ -31,8 +31,9 @@ namespace MssDevLab.TestAdService
 
             app.UseAuthorization();
 
-
-            app.MapControllers();
+            app.MapControllerRoute(
+                name: "default",
+                pattern: "{controller}/{action}/{id?}");
 
             app.Run();
         }

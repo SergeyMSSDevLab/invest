@@ -14,18 +14,25 @@ namespace MssDevLab.WebMVC.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        private readonly ITestServiceIntegration _testService;
+        private readonly ITestAdServiceIntegration _testAdService;
 
-        public HomeController(ILogger<HomeController> logger, ITestServiceIntegration testService)
+        public HomeController(ILogger<HomeController> logger, ITestAdServiceIntegration testAdService)
         {
             _logger = logger;
-            _testService = testService;
+            _testAdService = testAdService;
         }
 
         public async Task<IActionResult> Index()
         {
-            var items = await _testService.GetAsync<IEnumerable<ServiceData>>("WeatherForecast", "homeController");
-            _logger.LogInformation("HomeController gets items from test service status code:{StatusCode}, items:{itemsCount}", items.StatusCode, items.Result?.Count());
+            var serviceRequest = new ServiceRequest
+            {
+                PageNumber = 1,
+                PageSize = 10,
+                QueryString = string.Empty,
+                UserPreferences = null
+            };
+            var adsResponse = await _testAdService.FetchAds(serviceRequest);
+            _logger.LogInformation("HomeController gets items from test ad service. Items:{itemsCount}", adsResponse?.Items?.Count());
             return View();
         }
 

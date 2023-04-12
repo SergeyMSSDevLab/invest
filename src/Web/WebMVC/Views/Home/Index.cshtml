@@ -1,9 +1,46 @@
-﻿@{
+﻿@model MssDevLab.WebMVC.ViewModels.HomeIndexViewModel
+
+
+@{
     ViewData["Title"] = "Home Page";
 }
 
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
+    <h1 class="display-4">Login with admin@email.com / Pass123$admin.</h1>
     <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-    <p>Login with admin@email.com / Pass123$admin.</p>
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <p>col1</p>
+            <p>col1</p>
+            <p>col1</p>
+            <p>col1</p>
+            <p>col1</p>
+
+            <p>col1</p>
+        </div>
+        <div class="col">
+            @if (Model.HasCommonAds)
+            {
+                foreach (var adItem in Model.CommonAds)
+                {
+                    <div style="border-width:1px;border-style:solid;border-color:black; margin: 2px 2px 2px 2px;">
+                        <div class="row">
+                            <div class="col">
+                                <a href="@adItem.Url">
+                                    <img src="@adItem.ImageUrl" alt="@adItem.Type" style="width:200px;height:170px;">
+                                </a>
+                            </div>
+                            <div class="col">
+                                <p>@adItem.Title</p>
+                                <p>@adItem.Description</p>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+    </div>
 </div>

@@ -28,6 +28,7 @@ namespace MssDevLab.TestAdService.Controllers
         [ProducesResponseType(typeof(ServiceResponse), (int)HttpStatusCode.OK)]
         public async Task<ActionResult<ServiceResponse>> FetchAdsAsync([FromBody] ServiceRequest requestData)
         {
+            _logger.LogDebug($"TestAdService.TestAdServiceController.FetchAdsAsync called");
             string? email = null;
             if (requestData.UserPreferences != null)
             {

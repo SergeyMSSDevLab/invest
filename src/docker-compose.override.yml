@@ -51,6 +51,17 @@ services:
     ports:
       - "6081:80"
 
+  mssproto-test-service1:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://0.0.0.0:80
+      - UseCustomizationData=True
+      - ApplicationInsights__InstrumentationKey=${INSTRUMENTATION_KEY}
+      - OrchestratorType=${ORCHESTRATOR_TYPE}
+      - UseLoadTest=${USE_LOADTEST:-False}
+    ports:
+      - "6083:80"
+
   mssproto-test-ad-service:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development

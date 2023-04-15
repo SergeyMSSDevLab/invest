@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace MssDevLab.WebMVC.Services
 {
-    public interface ITestServiceIntegration
+    public interface ITestService1Integration
     {
         Task<ServiceResponse?> FetchData(ServiceRequest request);
     }

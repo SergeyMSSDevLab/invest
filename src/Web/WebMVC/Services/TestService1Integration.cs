@@ -7,15 +7,15 @@ using System.Threading.Tasks;
 
 namespace MssDevLab.WebMVC.Services
 {
-    internal class TestServiceIntegration : BaseHttpCaller, ITestServiceIntegration
+    internal class TestService1Integration : BaseHttpCaller, ITestService1Integration
     {
         private readonly ILogger _logger;
         protected override ILogger Log => _logger;
 
-        public TestServiceIntegration(HttpClient httpClient, ILogger<TestServiceIntegration> logger) : base(httpClient)
+        public TestService1Integration(HttpClient httpClient, ILogger<TestService1Integration> logger) : base(httpClient)
         {
             _logger = logger;
-            string baseUrl = "http://mssproto-test-service";    // TODO: get from settings
+            string baseUrl = "http://mssproto-test-service1";    // TODO: get from settings
 
             if (string.IsNullOrWhiteSpace(baseUrl))
             {
@@ -27,12 +27,12 @@ namespace MssDevLab.WebMVC.Services
             }
 
             httpClient.BaseAddress = new Uri(baseUrl, UriKind.Absolute);
-            _logger.LogDebug($"TestServiceIntegration instance created, base address: '{baseUrl}'");
+            _logger.LogDebug($"TestService1Integration instance created, base address: '{baseUrl}'");
         }
 
         public async Task<ServiceResponse?> FetchData(ServiceRequest request)
         {
-            var response = await PostAsync<ServiceRequest, ServiceResponse>("TestService/FetchData", request).ConfigureAwait(false);
+            var response = await PostAsync<ServiceRequest, ServiceResponse>("TestService1/FetchData", request).ConfigureAwait(false);
             if (response != null && response.IsSuccessCode)
             {
                 return response.Result;

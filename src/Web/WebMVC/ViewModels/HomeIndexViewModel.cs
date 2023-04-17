@@ -15,7 +15,7 @@ namespace MssDevLab.WebMVC.ViewModels
         }
 
         public IEnumerable<ServiceData> CommonAds { get; set; }
-
         public IEnumerable<ServiceData> WallItems { get; set; }
+        public string? QueryString { get; set; }
     }
 }

@@ -30,13 +30,13 @@ namespace MssDevLab.WebMVC.Controllers
             _testService1 = testService1;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string? searchString)
         {
             var serviceRequest = new ServiceRequest
             {
                 PageNumber = 1,
                 PageSize = 5,
-                QueryString = string.Empty,
+                QueryString = searchString ?? string.Empty,
                 UserPreferences = null
             };
 
@@ -55,34 +55,38 @@ namespace MssDevLab.WebMVC.Controllers
 
             ServiceResponse[] completedTasks = await Task.WhenAll(tasks);   // TODO: consider to move try/catch from services to the controller
 
-            return View(BuildViewModel(completedTasks.Where(t => t.IsSuccesfull))); // TODO: process errors
+            return View(BuildViewModel(completedTasks.Where(t => t.IsSuccesfull), searchString)); // TODO: process errors
         }
 
         private const int AdInsertDist = 3;
 
-        private HomeIndexViewModel BuildViewModel(IEnumerable<ServiceResponse> completedTasks)
+        private HomeIndexViewModel BuildViewModel(IEnumerable<ServiceResponse> completedTasks, string? searchString)
         {
             var ads = completedTasks.Where(r => r.ServiceType == ServiceType.AdService).SelectMany(t => t.Items).ToArray();
             var viewModel = new HomeIndexViewModel(ads.Take(3));
 
-            var dataList = new List<ServiceData>(completedTasks
-                .Where(r => r.ServiceType != ServiceType.AdService)
-                .SelectMany(t => t.Items)
-                .OrderByDescending(d => d.Relevance));
-            
-            var insertPoint = AdInsertDist;
-            foreach (var addData in ads.Skip(3))
+            if (!string.IsNullOrWhiteSpace(searchString))
             {
-                if (insertPoint < dataList.Count)
-                {
-                    dataList.Insert(insertPoint, addData);
-                    insertPoint++;
-                }
-                insertPoint += AdInsertDist;
-            }
-            viewModel.WallItems = dataList;
+                viewModel.QueryString = searchString;
+                var dataList = new List<ServiceData>(completedTasks
+                    .Where(r => r.ServiceType != ServiceType.AdService)
+                    .SelectMany(t => t.Items)
+                    .OrderByDescending(d => d.Relevance));
 
-            _logger.LogInformation("HomeController gets {count} items from the services.", dataList.Count);
+                var insertPoint = AdInsertDist;
+                foreach (var addData in ads.Skip(3))
+                {
+                    if (insertPoint < dataList.Count)
+                    {
+                        dataList.Insert(insertPoint, addData);
+                        insertPoint++;
+                    }
+                    insertPoint += AdInsertDist;
+                }
+                viewModel.WallItems = dataList;
+                _logger.LogInformation("HomeController gets {count} items from the services.", dataList.Count);
+            }
+
             return viewModel;
         }
 

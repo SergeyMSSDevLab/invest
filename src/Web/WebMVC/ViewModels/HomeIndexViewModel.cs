@@ -10,12 +10,12 @@ namespace MssDevLab.WebMVC.ViewModels
     {
         public HomeIndexViewModel(IEnumerable<ServiceData>? commonAds) 
         { 
-            CommonAds = commonAds;
+            CommonAds = commonAds ?? Enumerable.Empty<ServiceData>();
             WallItems = Enumerable.Empty<ServiceData>();
         }
 
-        public IEnumerable<ServiceData>? CommonAds { get; set; }
+        public IEnumerable<ServiceData> CommonAds { get; set; }
 
-        public IEnumerable<ServiceData>? WallItems { get; set; }
+        public IEnumerable<ServiceData> WallItems { get; set; }
     }
 }

@@ -70,7 +70,7 @@ namespace MssDevLab.Common.Http
         {
             return PutAsync<EmptyClass, T>(restApiPath, new EmptyClass());
         }
-        public async Task<ICallerResult<TReturn>> PutAsync<T, TReturn>(string restApiPath, T entity, [System.Runtime.CompilerServices.CallerMemberName] string callerName = "") where T : class
+        public async Task<ICallerResult<TReturn>> PutAsync<T, TReturn>(string restApiPath, T entity) where T : class
         {
             var returnType = typeof(TReturn);
             if (returnType == _stringType)
@@ -135,20 +135,6 @@ namespace MssDevLab.Common.Http
         private void LogInformation(string message)
         {
             Log.LogInformation("{message}", message);
-        }
-
-        private void LogDebug(string message, object? data = null)
-        {
-            string text;
-            if (data != null)
-            {
-                text = $"{message}: {JsonConvert.SerializeObject(data)}";
-            }
-            else
-            {
-                text = $"{message}";
-            }
-            Log.LogDebug("{text}", text);
         }
 
         private void LogError(string message, object? data = null)

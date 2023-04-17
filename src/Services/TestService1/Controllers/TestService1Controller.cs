@@ -36,7 +36,9 @@ namespace MssDevLab.TestService1.Controllers
                 ItemsAmount = int.MaxValue,    // TODO: Retrieve items amount from underlying service
                 PageNumber = requestData.PageNumber,
                 PageSize = requestData.PageSize,
-                QueryString = requestData.QueryString
+                QueryString = requestData.QueryString,
+                ServiceType = ServiceType.TestService1,
+                IsSuccesfull = true
             };
             var items = new List<ServiceData>();
             for (int i = 0; i < requestData.PageSize; i++)
@@ -48,11 +50,12 @@ namespace MssDevLab.TestService1.Controllers
                     Url = "http://www.mssdevlab.com",
                     ImageUrl = "http://www.mssdevlab.com/img/visa.png",
                     Title = $"TestService1 index:{i + 1} page:{requestData.PageNumber}",
-                    Description = $"Example of the data from provider. TestService1 email:'{email}' query:'{requestData.QueryString}'"
+                    Description = $"Example of the data from provider. TestService1 email:'{email}' query:'{requestData.QueryString}'",
+                    Relevance = i
                 };
                 items.Add(data);
             }
-            ret.Items = items;
+            ret.Items = items.ToArray();
 
             return Ok(await Task.FromResult(ret));
         }

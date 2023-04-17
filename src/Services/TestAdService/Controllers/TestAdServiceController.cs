@@ -44,7 +44,9 @@ namespace MssDevLab.TestAdService.Controllers
                 ItemsAmount = int.MaxValue,    // TODO: Retrieve items amount from underlying service
                 PageNumber = requestData.PageNumber,
                 PageSize = requestData.PageSize,
-                QueryString = requestData.QueryString
+                QueryString = requestData.QueryString,
+                ServiceType = ServiceType.AdService,
+                IsSuccesfull = true
             };
             var items = new List<ServiceData>();
             for(int i = 0; i < requestData.PageSize; i++)
@@ -61,7 +63,7 @@ namespace MssDevLab.TestAdService.Controllers
                 };
                 items.Add(data);
             }
-            ret.Items = items;
+            ret.Items = items.ToArray();
 
             return Ok(await Task.FromResult(ret));
         }

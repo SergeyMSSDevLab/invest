@@ -46,22 +46,44 @@ namespace MssDevLab.WebMVC.Controllers
                 serviceRequest.UserPreferences = new UserData { Email = userName };
             }
 
-            var adsResponse = await _testAdService.FetchAds(serviceRequest);
-            _logger.LogInformation("HomeController gets items from test ad service. Items:{itemsCount}", adsResponse?.Items?.Count());
-            var viewModel = new HomeIndexViewModel(adsResponse?.Items);
+            var tasks = new List<Task<ServiceResponse>>
+            {
+                _testAdService.FetchAds(serviceRequest),
+                _testService.FetchData(serviceRequest),
+                _testService1.FetchData(serviceRequest)
+            };
 
-            var serviceResponse = await _testService.FetchData(serviceRequest);
-            _logger.LogInformation("HomeController gets items from test  service. Items:{itemsCount}", serviceResponse?.Items?.Count());
+            ServiceResponse[] completedTasks = await Task.WhenAll(tasks);   // TODO: consider to move try/catch from services to the controller
 
-            var service1Response = await _testService1.FetchData(serviceRequest);
-            _logger.LogInformation("HomeController gets items from test  service1. Items:{itemsCount}", service1Response?.Items?.Count());
+            return View(BuildViewModel(completedTasks.Where(t => t.IsSuccesfull))); // TODO: process errors
+        }
 
-            var dataList = new List<ServiceData>();
-            dataList.AddRange(serviceResponse?.Items ?? Enumerable.Empty<ServiceData>());
-            dataList.AddRange(service1Response?.Items ?? Enumerable.Empty<ServiceData>());
+        private const int AdInsertDist = 3;
+
+        private HomeIndexViewModel BuildViewModel(IEnumerable<ServiceResponse> completedTasks)
+        {
+            var ads = completedTasks.Where(r => r.ServiceType == ServiceType.AdService).SelectMany(t => t.Items).ToArray();
+            var viewModel = new HomeIndexViewModel(ads.Take(3));
+
+            var dataList = new List<ServiceData>(completedTasks
+                .Where(r => r.ServiceType != ServiceType.AdService)
+                .SelectMany(t => t.Items)
+                .OrderByDescending(d => d.Relevance));
+            
+            var insertPoint = AdInsertDist;
+            foreach (var addData in ads.Skip(3))
+            {
+                if (insertPoint < dataList.Count)
+                {
+                    dataList.Insert(insertPoint, addData);
+                    insertPoint++;
+                }
+                insertPoint += AdInsertDist;
+            }
             viewModel.WallItems = dataList;
 
-            return View(viewModel);
+            _logger.LogInformation("HomeController gets {count} items from the services.", dataList.Count);
+            return viewModel;
         }
 
         public IActionResult Privacy()

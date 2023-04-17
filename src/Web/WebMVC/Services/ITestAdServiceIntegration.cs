@@ -5,6 +5,6 @@ namespace MssDevLab.WebMVC.Services
 {
     public interface ITestAdServiceIntegration
     {
-        Task<ServiceResponse?> FetchAds(ServiceRequest request);
+        Task<ServiceResponse> FetchAds(ServiceRequest request);
     }
 }

@@ -8,5 +8,6 @@ namespace MssDevLab.Common.Models
         public ServiceType Type { get; set; }
         public string? Url { get; set; }
         public string? ImageUrl { get; set;}
+        public int Relevance { get; set; }
     }
 }

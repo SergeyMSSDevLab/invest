@@ -2,6 +2,9 @@ using Microsoft.AspNetCore.Mvc;
 using MssDevLab.Common.Models;
 using Serilog;
 using System.Net;
+using VkNet.Model.RequestParams;
+using VkNet.Model;
+using VkNet;
 
 namespace MssDevLab.VkService.Controllers
 {
@@ -10,6 +13,7 @@ namespace MssDevLab.VkService.Controllers
     public class VkServiceController : ControllerBase
     {
         private readonly ILogger<VkServiceController> _logger;
+        private readonly string AccessToken = "";
 
         public VkServiceController(ILogger<VkServiceController> logger)
         {
@@ -28,7 +32,43 @@ namespace MssDevLab.VkService.Controllers
                 email = requestData.UserPreferences.Email;
             }
 
-            // Prepare request to actual API
+            var items = new List<ServiceData>();
+            if (!string.IsNullOrWhiteSpace(requestData.QueryString))
+            {
+                // Prepare request to actual API
+                var api = new VkApi();
+
+                api.Authorize(new ApiAuthParams
+                {
+                    AccessToken = AccessToken
+                });
+
+                var req = new VideoSearchParams()
+                {
+                    Adult = true,
+                    Count = requestData.PageSize,
+                    Offset = 0,
+                    Sort = VkNet.Enums.VideoSort.Relevance,
+                    Query = requestData.QueryString
+                };
+
+
+                VkNet.Utils.VkCollection<VkNet.Model.Attachments.Video> res = await api.Video.SearchAsync(req);
+                foreach (var v in res)
+                {
+                    var data = new ServiceData
+                    {
+                        Id = v.Id.ToString(),
+                        Type = ServiceType.VkService,
+                        Url = v.Player.AbsoluteUri,
+                        ImageUrl = v.Image?.FirstOrDefault()?.Url.AbsoluteUri,
+                        Title = v.Title,
+                        Description = v.Description,
+                        Relevance = 5
+                    };
+                    items.Add(data);
+                }
+            }
 
             // Prepare response
             var ret = new ServiceResponse()
@@ -38,24 +78,9 @@ namespace MssDevLab.VkService.Controllers
                 PageSize = requestData.PageSize,
                 QueryString = requestData.QueryString,
                 ServiceType = ServiceType.VkService,
-                IsSuccesfull = true
+                IsSuccesfull = true,
+                Items = items.ToArray()
             };
-            var items = new List<ServiceData>();
-            for (int i = 0; i < requestData.PageSize; i++)
-            {
-                var data = new ServiceData
-                {
-                    Id = requestData.PageNumber.ToString() + i.ToString(),
-                    Type = ServiceType.VkService,
-                    Url = "http://www.mssdevlab.com",
-                    ImageUrl = "",
-                    Title = $"VkService index:{i + 1} page:{requestData.PageNumber}",
-                    Description = $"Example of the data from provider. VkService email:'{email}' query:'{requestData.QueryString}'",
-                    Relevance = i
-                };
-                items.Add(data);
-            }
-            ret.Items = items.ToArray();
 
             return Ok(await Task.FromResult(ret));
         }

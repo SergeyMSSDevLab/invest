@@ -18,16 +18,19 @@ namespace MssDevLab.WebMVC.Controllers
         private readonly ITestAdServiceIntegration _testAdService;
         private readonly ITestServiceIntegration _testService;
         private readonly ITestService1Integration _testService1;
+        private readonly IVkServiceIntegration _vkService;
 
         public HomeController(ILogger<HomeController> logger, 
             ITestAdServiceIntegration testAdService, 
-            ITestServiceIntegration testService, 
+            ITestServiceIntegration testService,
+            IVkServiceIntegration vkService,
             ITestService1Integration testService1)
         {
             _logger = logger;
             _testAdService = testAdService;
             _testService = testService;
             _testService1 = testService1;
+            _vkService = vkService;
         }
 
         public async Task<IActionResult> Index(string? searchString)
@@ -50,7 +53,8 @@ namespace MssDevLab.WebMVC.Controllers
             {
                 _testAdService.FetchAds(serviceRequest),
                 _testService.FetchData(serviceRequest),
-                _testService1.FetchData(serviceRequest)
+                _testService1.FetchData(serviceRequest),
+                _vkService.FetchData(serviceRequest)
             };
 
             ServiceResponse[] completedTasks = await Task.WhenAll(tasks);   // TODO: consider to move try/catch from services to the controller
@@ -68,10 +72,10 @@ namespace MssDevLab.WebMVC.Controllers
             if (!string.IsNullOrWhiteSpace(searchString))
             {
                 viewModel.QueryString = searchString;
-                var dataList = new List<ServiceData>(completedTasks
+                var dataList = completedTasks
                     .Where(r => r.ServiceType != ServiceType.AdService)
                     .SelectMany(t => t.Items)
-                    .OrderByDescending(d => d.Relevance));
+                    .OrderByDescending(d => d.Relevance).ToList();
 
                 var insertPoint = AdInsertDist;
                 foreach (var addData in ads.Skip(3))

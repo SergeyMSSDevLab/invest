@@ -11,6 +11,7 @@ namespace MssDevLab.Common.Models
         Unknown = 0,
         AdService = 1,
         TestService = 2,
-        TestService1 = 3
+        TestService1 = 3,
+        VkService = 4
     }
 }

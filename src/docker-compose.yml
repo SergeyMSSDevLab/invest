@@ -26,6 +26,12 @@ services:
       context: .
       dockerfile: Services/TestService/Dockerfile
 
+  mssproto-vk-service:
+    image: ${REGISTRY:-mssproto}/webmvc:${PLATFORM:-linux}-${TAG:-latest}
+    build:
+      context: .
+      dockerfile: Services/VkService/Dockerfile
+
   mssproto-test-service1:
     image: ${REGISTRY:-mssproto}/webmvc:${PLATFORM:-linux}-${TAG:-latest}
     build:

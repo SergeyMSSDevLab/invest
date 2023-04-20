@@ -73,6 +73,7 @@ namespace MssDevLab.WebMVC
         // Adds all Http client services
         static void AddHttpClientServices(WebApplicationBuilder builder)
         {
+            builder.Services.AddHttpClient<IVkServiceIntegration, VkServiceIntegration>();
             builder.Services.AddHttpClient<ITestServiceIntegration, TestServiceIntegration>();
             builder.Services.AddHttpClient<ITestService1Integration, TestService1Integration>();
             builder.Services.AddHttpClient<ITestAdServiceIntegration, TestAdServiceIntegration>();

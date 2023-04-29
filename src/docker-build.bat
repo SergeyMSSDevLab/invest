@@ -1,1 +1,1 @@
-docker-compose -p invest build
+docker-compose -p mssproto build

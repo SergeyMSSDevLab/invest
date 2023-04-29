@@ -1,1 +1,1 @@
-docker-compose -p invest up
+docker-compose -p mssproto up

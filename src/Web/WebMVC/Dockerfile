@@ -3,7 +3,7 @@
 FROM mcr.microsoft.com/dotnet/aspnet:7.0 AS base
 WORKDIR /app
 EXPOSE 80
-EXPOSE 443
+#EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 WORKDIR /src
@@ -12,7 +12,13 @@ WORKDIR /src
 # to take advantage of Docker's build cache, to speed up local container builds
 COPY "mssproto.sln" "mssproto.sln"
 
+COPY "Common/Common/Common.csproj" "Common/Common/Common.csproj"
+COPY "Common/CommonCore/CommonCore.csproj" "Common/CommonCore/CommonCore.csproj"
 COPY "Web/WebMVC/WebMVC.csproj" "Web/WebMVC/WebMVC.csproj"
+COPY ["Services/TestAdService/TestAdService.csproj", "Services/TestAdService/TestAdService.csproj"]
+COPY ["Services/TestService/TestService.csproj", "Services/TestService/TestService.csproj"]
+COPY ["Services/TestService1/TestService1.csproj", "Services/TestService1/TestService1.csproj"]
+COPY ["Services/VkService/VkService.csproj", "Services/VkService/VkService.csproj"]
 
 COPY "docker-compose.dcproj" "docker-compose.dcproj"
 

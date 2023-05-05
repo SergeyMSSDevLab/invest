@@ -10,16 +10,14 @@ services:
     container_name: mssproto-rabbitmq
     image: masstransit/rabbitmq
 
-  mssproto-sqldb:
-    container_name: mssproto-sqldb
-    image: mcr.microsoft.com/mssql/server:2019-latest 
-
   mssproto-fe:
     image: ${REGISTRY:-mssdevlab}/mssproto:webmvc-${PLATFORM:-linux}-${TAG:-latest}
     container_name: mssproto-fe
     build:
       context: .
       dockerfile: Web/WebMVC/Dockerfile
+    volumes:
+      - mssproto-usersdata:/appdata
 
   mssproto-vk-service:
     image: ${REGISTRY:-mssdevlab}/mssproto:vkservice-${PLATFORM:-linux}-${TAG:-latest}
@@ -48,3 +46,7 @@ services:
     build:
       context: .
       dockerfile: Services/TestAdService/Dockerfile
+      
+volumes:
+  mssproto-usersdata:
+    external: false

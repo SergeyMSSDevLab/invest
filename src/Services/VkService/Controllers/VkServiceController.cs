@@ -13,11 +13,13 @@ namespace MssDevLab.VkService.Controllers
     public class VkServiceController : ControllerBase
     {
         private readonly ILogger<VkServiceController> _logger;
-        private readonly string AccessToken = "";
 
-        public VkServiceController(ILogger<VkServiceController> logger)
+        private readonly string _defaultAccessToken;
+
+        public VkServiceController(ILogger<VkServiceController> logger, IConfiguration configuration)
         {
             _logger = logger;
+            _defaultAccessToken = configuration["Secrets:DefaultVkToken"] ?? string.Empty;
         }
 
         [HttpPost(Name = "FetchData")]
@@ -25,6 +27,7 @@ namespace MssDevLab.VkService.Controllers
         public async Task<ActionResult<ServiceResponse>> FetchDataAsync([FromBody] ServiceRequest requestData)
         {
             _logger.LogDebug($"VkService.TestServiceController.FetchDataAsync called");
+            _logger.LogDebug("VkService.TestServiceController._defaultAccessToken: {_defaultAccessToken}", _defaultAccessToken);
             string? email = null;
             if (requestData.UserPreferences != null)
             {
@@ -33,14 +36,14 @@ namespace MssDevLab.VkService.Controllers
             }
 
             var items = new List<ServiceData>();
-            if (!string.IsNullOrWhiteSpace(requestData.QueryString))
+            if (!string.IsNullOrWhiteSpace(requestData.QueryString) && !string.IsNullOrEmpty(_defaultAccessToken))  // TODO: consider individual token
             {
                 // Prepare request to actual API
                 var api = new VkApi();
 
                 api.Authorize(new ApiAuthParams
                 {
-                    AccessToken = AccessToken
+                    AccessToken = _defaultAccessToken
                 });
 
                 var req = new VideoSearchParams()

@@ -1,7 +1,3 @@
-
-using Serilog;
-using Serilog.Sinks.Elasticsearch;
-using System.Reflection;
 using MssDevLab.Common.Extensions;
 
 namespace MssDevLab.VkService
@@ -12,9 +8,13 @@ namespace MssDevLab.VkService
         {
             var builder = WebApplication.CreateBuilder(args);
             builder.Host.ConfigureElasticSerilog("VkService");
+            builder.Configuration.AddJsonFile("/run/secrets/app_secret");
 
             // Add services to the container.
-
+            //builder.Services.AddSwaggerGen(c =>
+            //{
+            //    c.SwaggerDoc("v1", new() { Title = "VkService", Version = "v1" });
+            //});
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
@@ -28,9 +28,6 @@ namespace MssDevLab.VkService
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
-
-            //app.UseAuthorization();
-
 
             app.MapControllers();
 

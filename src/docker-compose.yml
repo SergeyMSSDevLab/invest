@@ -25,6 +25,8 @@ services:
     build:
       context: .
       dockerfile: Services/VkService/Dockerfile
+    secrets:
+     - app_secret
 
   mssproto-test-service:
     image: ${REGISTRY:-mssdevlab}/mssproto:testservice-${PLATFORM:-linux}-${TAG:-latest}
@@ -50,3 +52,7 @@ services:
 volumes:
   mssproto-usersdata:
     external: false
+
+secrets:
+  app_secret:
+    file: appsecrets.json

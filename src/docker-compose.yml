@@ -16,6 +16,8 @@ services:
     build:
       context: .
       dockerfile: Web/WebMVC/Dockerfile
+    secrets:
+     - app_secret
     volumes:
       - mssproto-usersdata:/appdata
 

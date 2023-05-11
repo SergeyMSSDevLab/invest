@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using MssDevLab.Common.Extensions;
 using MssDevLab.WebMVC.Data;
+using MssDevLab.WebMVC.Hubs;
 using MssDevLab.WebMVC.Services;
 using System;
 
@@ -25,6 +26,7 @@ namespace MssDevLab.WebMVC
             builder.Configuration.AddJsonFile("/run/secrets/app_secret");
 
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
+            builder.Services.AddSignalR();
 
             builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
@@ -59,6 +61,7 @@ namespace MssDevLab.WebMVC
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");
             app.MapRazorPages();
+            app.MapHub<SearchHub>("/searchHub");
 
             // Apply database migration automatically. Note that this approach is not
             // recommended for production scenarios. Consider generating SQL scripts from

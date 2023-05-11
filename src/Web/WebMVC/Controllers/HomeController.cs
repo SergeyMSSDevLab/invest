@@ -33,7 +33,33 @@ namespace MssDevLab.WebMVC.Controllers
             _vkService = vkService;
         }
 
-        public async Task<IActionResult> Index(string? searchString)
+        public async Task<IActionResult> Index()
+        {
+            var serviceRequest = new ServiceRequest
+            {
+                PageNumber = 1,
+                PageSize = 5,
+                QueryString = string.Empty,
+                UserPreferences = null
+            };
+
+            var userName = User?.Identity?.Name;
+            if (!string.IsNullOrWhiteSpace(userName))
+            {
+                serviceRequest.UserPreferences = new UserData { Email = userName };
+            }
+
+            var tasks = new List<Task<ServiceResponse>>
+            {
+                _testAdService.FetchAds(serviceRequest),
+            };
+
+            ServiceResponse[] completedTasks = await Task.WhenAll(tasks);   // TODO: consider to move try/catch from services to the controller
+
+            return View(BuildViewModel(completedTasks.Where(t => t.IsSuccesfull), string.Empty)); // TODO: process errors
+        }
+
+        public async Task<IActionResult> Search(string? searchString)
         {
             var serviceRequest = new ServiceRequest
             {
@@ -59,7 +85,7 @@ namespace MssDevLab.WebMVC.Controllers
 
             ServiceResponse[] completedTasks = await Task.WhenAll(tasks);   // TODO: consider to move try/catch from services to the controller
 
-            return View(BuildViewModel(completedTasks.Where(t => t.IsSuccesfull), searchString)); // TODO: process errors
+            return View("Search", BuildViewModel(completedTasks.Where(t => t.IsSuccesfull), searchString)); // TODO: process errors
         }
 
         private const int AdInsertDist = 3;

@@ -2,23 +2,12 @@
 
 
 @{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Search video";
 }
-
-<div class="text-center">
-    <p class="display-4">Login with admin@email.com / Pass123$admin.</p>
-</div>
-
-<form asp-controller="Home" asp-action="Index" method="get">
-    <p>
-        Search for: <input type="text" name="SearchString" value="@Model.QueryString" />
-        <input type="submit" value="Search" />
-    </p>
-</form>
 
 <div class="container">
     <div class="row">
-        <div class="col">
+        <div class="col-1">
             <p>There are icons for filtering</p>
             <ul>
                 <li>Youtube</li>
@@ -27,10 +16,24 @@
                 <li>VK</li>
             </ul>
         </div>
-        <div class="col">
-            <partial name="_ItemsList"/>
+        <div class="col-8">
+            <div class="row p-1">
+                <div class="col-2">Search for:</div>
+                <div class="col-8"><input type="text" class="w-100" id="messageInput" /></div>
+                <div class="col-2 text-end">
+                    <input type="button" id="sendButton" value="Search" />
+                </div>
+            </div>
+            <div class="row p-1">
+                <div class="col-12">
+                    <hr />
+                </div>
+            </div>
+
+            <div id="searchList"></div>
+
         </div>
-        <div class="col">
+        <div class="col-3">
             @foreach (var adItem in Model.CommonAds)
             {
                 <partial name="_ItemPartial" model="adItem" />
@@ -38,3 +41,6 @@
         </div>
     </div>
 </div>
+
+<script src="~/js/signalr/dist/browser/signalr.js"></script>
+<script src="~/js/chat.js"></script>

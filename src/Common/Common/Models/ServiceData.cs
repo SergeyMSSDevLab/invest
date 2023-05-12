@@ -9,5 +9,6 @@ namespace MssDevLab.Common.Models
         public string? Url { get; set; }
         public string? ImageUrl { get; set;}
         public int Relevance { get; set; }
+        public string? ConnectionId { get; set; }
     }
 }

@@ -8,6 +8,7 @@ namespace MssDevLab.Common.Models
 {
     public class ServiceRequest
     {
+        public string? ConnectionId { get; set; }
         public string? QueryString { get; set; }
         public int PageNumber { get; set; }
         public int PageSize { get; set; } = 10;

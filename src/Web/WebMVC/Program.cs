@@ -32,7 +32,7 @@ namespace MssDevLab.WebMVC
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             builder.Services.AddControllersWithViews();
 
-            AddHttpClientServices(builder);
+            AddServices(builder);
 
 
             var app = builder.Build();
@@ -75,12 +75,14 @@ namespace MssDevLab.WebMVC
         }
         
         // Adds all Http client services
-        static void AddHttpClientServices(WebApplicationBuilder builder)
+        static void AddServices(WebApplicationBuilder builder)
         {
             builder.Services.AddHttpClient<IVkServiceIntegration, VkServiceIntegration>();
             builder.Services.AddHttpClient<ITestServiceIntegration, TestServiceIntegration>();
             builder.Services.AddHttpClient<ITestService1Integration, TestService1Integration>();
             builder.Services.AddHttpClient<ITestAdServiceIntegration, TestAdServiceIntegration>();
+
+            builder.Services.AddTransient<INotificationService,  NotificationService>();
         }
 
     }

@@ -1,12 +1,21 @@
 ﻿using Elasticsearch.Net;
 using Microsoft.AspNetCore.SignalR;
 using MssDevLab.Common.Models;
+using MssDevLab.WebMVC.Services;
 using System.Threading.Tasks;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace MssDevLab.WebMVC.Hubs
 {
     public class SearchHub : Hub
     {
+        private readonly INotificationService _notificationService;
+        public SearchHub(INotificationService notificationService) 
+        { 
+            _notificationService = notificationService;
+        }
+
         public async Task Search(string searchString, int pageNumber)
         {
             var connectionId = Context.ConnectionId;
@@ -16,31 +25,15 @@ namespace MssDevLab.WebMVC.Hubs
                 PageNumber = pageNumber,
                 PageSize = 10,
                 QueryString = searchString ?? string.Empty,
-                UserPreferences = null
+                UserPreferences = null,
+                ConnectionId = connectionId
             };
 
             if (!string.IsNullOrWhiteSpace(userName))
             {
                 serviceRequest.UserPreferences = new UserData { Email = userName };
             }
-            // TODO: add connectionId to the service request
-            // TODO: publish event to all subscribers
-
-            // TODO: remove the next debug stub (modeling response)
-            for (int i = 0; i < serviceRequest.PageSize; i++)
-            {
-                var data = new ServiceData
-                {
-                    Id = serviceRequest.PageNumber.ToString() + i.ToString(),
-                    Type = ServiceType.TestService,
-                    Url = "http://www.mssdevlab.com",
-                    ImageUrl = "http://www.mssdevlab.com/img/zoom.png",
-                    Title = $"TestService index:{i + 1} page:{serviceRequest.PageNumber}",
-                    Description = $"Example of the data from provider. TestService email:'{userName}' query:'{serviceRequest.QueryString}'",
-                    Relevance = i
-                };
-                await Clients.Client(connectionId).SendAsync("ReceiveMessage", data);
-            }
+            await _notificationService.StartSearch(serviceRequest);
         }
     }
 }

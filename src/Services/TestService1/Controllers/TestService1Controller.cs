@@ -17,8 +17,8 @@ namespace MssDevLab.TestService1.Controllers
         }
 
         [HttpPost(Name = "FetchData")]
-        [ProducesResponseType(typeof(ServiceResponse), (int)HttpStatusCode.OK)]
-        public async Task<ActionResult<ServiceResponse>> FetchDataAsync([FromBody] ServiceRequest requestData)
+        [ProducesResponseType(typeof(SearchCompletedEvent), (int)HttpStatusCode.OK)]
+        public async Task<ActionResult<SearchCompletedEvent>> FetchDataAsync([FromBody] SearchRequestedEvent requestData)
         {
             _logger.LogDebug($"TestService.TestServiceController.FetchDataAsync called");
             string? email = null;
@@ -31,7 +31,7 @@ namespace MssDevLab.TestService1.Controllers
             // Prepare request to actual API
 
             // Prepare response
-            var ret = new ServiceResponse()
+            var ret = new SearchCompletedEvent()
             {
                 ItemsAmount = int.MaxValue,    // TODO: Retrieve items amount from underlying service
                 PageNumber = requestData.PageNumber,

@@ -25,8 +25,8 @@ namespace MssDevLab.TestAdService.Controllers
         }
 
         [HttpPost(Name = "FetchAds")]
-        [ProducesResponseType(typeof(ServiceResponse), (int)HttpStatusCode.OK)]
-        public async Task<ActionResult<ServiceResponse>> FetchAdsAsync([FromBody] ServiceRequest requestData)
+        [ProducesResponseType(typeof(SearchCompletedEvent), (int)HttpStatusCode.OK)]
+        public async Task<ActionResult<SearchCompletedEvent>> FetchAdsAsync([FromBody] SearchRequestedEvent requestData)
         {
             _logger.LogDebug($"TestAdService.TestAdServiceController.FetchAdsAsync called");
             string? email = null;
@@ -39,7 +39,7 @@ namespace MssDevLab.TestAdService.Controllers
             // Prepare request to actual API
 
             // Prepare response
-            var ret = new ServiceResponse()
+            var ret = new SearchCompletedEvent()
             {
                 ItemsAmount = int.MaxValue,    // TODO: Retrieve items amount from underlying service
                 PageNumber = requestData.PageNumber,

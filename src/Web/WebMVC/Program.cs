@@ -4,15 +4,21 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using MssDevLab.Common.Extensions;
+using MssDevLab.Common.Models;
+using MssDevLab.CommonCore.Interfaces.EventBus;
+using MssDevLab.CommonCore.Services;
+using MssDevLab.EventBusRabbitMQ;
 using MssDevLab.WebMVC.Data;
 using MssDevLab.WebMVC.Hubs;
 using MssDevLab.WebMVC.Services;
+using RabbitMQ.Client;
 using System;
 
 namespace MssDevLab.WebMVC
 {
-    public class Program
+    public static class Program
     {
         public static /*async Task*/ void Main(string[] args)
         {
@@ -31,6 +37,7 @@ namespace MssDevLab.WebMVC
             builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             builder.Services.AddControllersWithViews();
+            builder.Services.AddEventBus(builder.Configuration);
 
             AddServices(builder);
 
@@ -63,6 +70,8 @@ namespace MssDevLab.WebMVC
             app.MapRazorPages();
             app.MapHub<SearchHub>("/searchHub");
 
+            app.UseEventBus();
+
             // Apply database migration automatically. Note that this approach is not
             // recommended for production scenarios. Consider generating SQL scripts from
             // migrations instead.
@@ -73,9 +82,14 @@ namespace MssDevLab.WebMVC
 
             app.Run();
         }
-        
-        // Adds all Http client services
-        static void AddServices(WebApplicationBuilder builder)
+        private static void UseEventBus(this IApplicationBuilder app)
+        {
+            var eventBus = app.ApplicationServices.GetRequiredService<IEventBus>();
+
+            eventBus.Subscribe<SearchCompletedEvent, IIntegrationEventHandler<SearchCompletedEvent>>();
+        }
+
+        private static void AddServices(WebApplicationBuilder builder)
         {
             builder.Services.AddHttpClient<IVkServiceIntegration, VkServiceIntegration>();
             builder.Services.AddHttpClient<ITestServiceIntegration, TestServiceIntegration>();
@@ -85,5 +99,53 @@ namespace MssDevLab.WebMVC
             builder.Services.AddTransient<INotificationService,  NotificationService>();
         }
 
+        private static IServiceCollection AddEventBus(this IServiceCollection services, IConfiguration configuration)
+        {
+            var retryCount = 5;
+            if (!string.IsNullOrEmpty(configuration["EventBusRetryCount"]))
+            {
+                if (!int.TryParse(configuration["EventBusRetryCount"], out retryCount))
+                {
+                    retryCount = 5;
+                }
+            }
+
+            services.AddSingleton<IEventBus, EventBusRabbitMQ.EventBusRabbitMQ>(sp =>
+            {
+                var subscriptionClientName = configuration["SubscriptionClientName"];
+                var rabbitMQPersistentConnection = sp.GetRequiredService<IRabbitMQPersistentConnection>();
+                var logger = sp.GetRequiredService<ILogger<EventBusRabbitMQ.EventBusRabbitMQ>>();
+                var eventBusSubcriptionsManager = sp.GetRequiredService<IEventBusSubscriptionsManager>();
+
+                return new EventBusRabbitMQ.EventBusRabbitMQ(rabbitMQPersistentConnection, logger, sp, eventBusSubcriptionsManager, subscriptionClientName, retryCount);
+            });
+
+            services.AddSingleton<IEventBusSubscriptionsManager, InMemoryEventBusSubscriptionsManager>();
+            services.AddTransient< IIntegrationEventHandler<SearchCompletedEvent>, SearchCompletedEventHandler >();
+
+            services.AddSingleton<IRabbitMQPersistentConnection>(sp => {
+                var logger = sp.GetRequiredService<ILogger<DefaultRabbitMQPersistentConnection>>();
+
+                var factory = new ConnectionFactory()
+                {
+                    HostName = configuration["EventBusConnection"],
+                    DispatchConsumersAsync = true
+                };
+
+                if (!string.IsNullOrEmpty(configuration["EventBusUserName"]))
+                {
+                    factory.UserName = configuration["EventBusUserName"];
+                }
+
+                if (!string.IsNullOrEmpty(configuration["EventBusPassword"]))
+                {
+                    factory.Password = configuration["EventBusPassword"];
+                }
+
+                return new DefaultRabbitMQPersistentConnection(factory, logger, retryCount);
+            });
+
+            return services;
+        }
     }
 }

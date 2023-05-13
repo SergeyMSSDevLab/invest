@@ -1,6 +1,6 @@
 namespace MssDevLab.Common.Models
 {
-    public class ServiceData
+    public record ServiceData
     {
         public string? Id { get; set; }
         public string? Title { get; set; }
@@ -9,6 +9,5 @@ namespace MssDevLab.Common.Models
         public string? Url { get; set; }
         public string? ImageUrl { get; set;}
         public int Relevance { get; set; }
-        public string? ConnectionId { get; set; }
     }
 }

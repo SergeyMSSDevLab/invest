@@ -16,11 +16,11 @@ namespace MssDevLab.WebMVC.Hubs
             _notificationService = notificationService;
         }
 
-        public async Task Search(string searchString, int pageNumber)
+        public void Search(string searchString, int pageNumber)
         {
             var connectionId = Context.ConnectionId;
             var userName = Context.User?.Identity?.Name;
-            var serviceRequest = new ServiceRequest
+            var serviceRequest = new SearchRequestedEvent
             {
                 PageNumber = pageNumber,
                 PageSize = 10,
@@ -33,7 +33,7 @@ namespace MssDevLab.WebMVC.Hubs
             {
                 serviceRequest.UserPreferences = new UserData { Email = userName };
             }
-            await _notificationService.StartSearch(serviceRequest);
+            _notificationService.StartSearch(serviceRequest);
         }
     }
 }

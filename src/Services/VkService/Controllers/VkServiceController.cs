@@ -23,8 +23,8 @@ namespace MssDevLab.VkService.Controllers
         }
 
         [HttpPost(Name = "FetchData")]
-        [ProducesResponseType(typeof(ServiceResponse), (int)HttpStatusCode.OK)]
-        public async Task<ActionResult<ServiceResponse>> FetchDataAsync([FromBody] ServiceRequest requestData)
+        [ProducesResponseType(typeof(SearchCompletedEvent), (int)HttpStatusCode.OK)]
+        public async Task<ActionResult<SearchCompletedEvent>> FetchDataAsync([FromBody] SearchRequestedEvent requestData)
         {
             _logger.LogDebug($"VkService.TestServiceController.FetchDataAsync called");
             _logger.LogDebug("VkService.TestServiceController._defaultAccessToken: {_defaultAccessToken}", _defaultAccessToken);
@@ -74,7 +74,7 @@ namespace MssDevLab.VkService.Controllers
             }
 
             // Prepare response
-            var ret = new ServiceResponse()
+            var ret = new SearchCompletedEvent()
             {
                 ItemsAmount = int.MaxValue,    // TODO: Retrieve items amount from underlying service
                 PageNumber = requestData.PageNumber,

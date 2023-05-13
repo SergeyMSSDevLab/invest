@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MssDevLab.CommonCore.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
@@ -7,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace MssDevLab.Common.Models
 {
-    public class ServiceResponse
+    public record SearchCompletedEvent : IntegrationEvent
     {
-        public ServiceResponse() 
+        public SearchCompletedEvent() 
         { 
             Items = Array.Empty<ServiceData>();
         }
@@ -20,5 +21,6 @@ namespace MssDevLab.Common.Models
         public int? ItemsAmount { get; set; }
         public ServiceType ServiceType { get; set; }
         public bool IsSuccesfull { get; set; }
+        public string? ConnectionId { get; set; }
     }
 }

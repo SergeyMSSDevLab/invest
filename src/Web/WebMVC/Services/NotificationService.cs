@@ -6,54 +6,59 @@ using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 using Microsoft.AspNetCore.SignalR;
 using MssDevLab.WebMVC.Hubs;
 using System.Threading.Tasks;
+using MssDevLab.CommonCore.Interfaces.EventBus;
+using MssDevLab.CommonCore.Models;
 
 namespace MssDevLab.WebMVC.Services
 {
     public class NotificationService : INotificationService
     {
         private readonly ILogger _logger;
-
         private readonly IHubContext<SearchHub> _hubContext;
+        private readonly IEventBus _eventBus;
 
-        public NotificationService(ILogger<TestAdServiceIntegration> logger, IHubContext<SearchHub> hubContext)
+        public NotificationService(ILogger<NotificationService> logger, 
+            IHubContext<SearchHub> hubContext, 
+            IEventBus eventBus)
         {
-            _logger = logger;
-            _hubContext = hubContext;
-            _logger.LogDebug("NotificationService instance created");
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _hubContext = hubContext ?? throw new ArgumentNullException(nameof(hubContext));
+            _eventBus = eventBus ?? throw new ArgumentNullException(nameof(eventBus));
         }
 
-        public async Task StartSearch(ServiceRequest request)
+        public void StartSearch(SearchRequestedEvent request)
         {
+            _logger.LogDebug("NotificationService StartSearch started");
             if (request.UserPreferences?.Email != null)
             {
                 // TODO: load user data
             }
-            // TODO: publish event to all subscribers
 
-            // TODO: remove the next debug stub (modeling response)
-
-            for (int i = 0; i < request.PageSize; i++)
+            var evt = (IntegrationEvent)request;
+            try
             {
-                var data = new ServiceData
-                {
-                    Id = request.PageNumber.ToString() + i.ToString(),
-                    Type = ServiceType.TestService,
-                    Url = "http://www.mssdevlab.com",
-                    ImageUrl = "http://www.mssdevlab.com/img/zoom.png",
-                    Title = $"TestService index:{i + 1} page:{request.PageNumber}",
-                    Description = $"Example of the data from provider. TestService email:'{request.UserPreferences?.Email}' query:'{request.QueryString}'",
-                    Relevance = i,
-                    ConnectionId = request.ConnectionId
-                };
-                await SearchCompleted(data);
+                _eventBus.Publish(evt);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error publishing search requested event: {IntegrationEventId} event: ({@IntegrationEvent}. Query string: {query})", evt.Id, evt, request.QueryString);
             }
         }
 
-        public async Task SearchCompleted(ServiceData data)
+        public async Task SearchCompletedAsync(SearchCompletedEvent eventData)
         {
-            if (!string.IsNullOrWhiteSpace(data.ConnectionId))
+            _logger.LogDebug("NotificationService SearchCompletedAsync started");
+            // TODO: consider to send all response and enumerate on the client side
+            if (!string.IsNullOrWhiteSpace(eventData.ConnectionId) && eventData.IsSuccesfull)
             {
-                await _hubContext.Clients.Client(data.ConnectionId).SendAsync("ReceiveMessage", data);
+                foreach(var data in eventData.Items)
+                {
+                    await _hubContext.Clients.Client(eventData.ConnectionId).SendAsync("ReceiveMessage", data);
+                }
+            }
+            else
+            {
+                _logger.LogError("ERROR searching: eventId={IntegrationEventId} event=({@IntegrationEvent})", eventData.Id, eventData);
             }
         }
     }

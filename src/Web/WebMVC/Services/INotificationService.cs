@@ -6,8 +6,8 @@ namespace MssDevLab.WebMVC.Services
 {
     public interface INotificationService
     {
-        Task StartSearch(ServiceRequest request);
+        void StartSearch(SearchRequestedEvent request);
 
-        Task SearchCompleted(ServiceData data);
+        Task SearchCompletedAsync(SearchCompletedEvent eventData);
     }
 }

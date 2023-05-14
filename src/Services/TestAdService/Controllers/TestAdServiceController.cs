@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using MssDevLab.Common.Models;
+using MssDevLab.TestAdService.Services;
 using System.Collections;
 using System.Net;
 using System.Net.Http;
@@ -11,10 +12,12 @@ namespace MssDevLab.TestAdService.Controllers
     public class TestAdServiceController : ControllerBase
     {
         private readonly ILogger<TestAdServiceController> _logger;
+        private readonly ISearchService _searchService;
 
-        public TestAdServiceController(ILogger<TestAdServiceController> logger)
+        public TestAdServiceController(ILogger<TestAdServiceController> logger, ISearchService searchService)
         {
             _logger = logger;
+            _searchService = searchService;
         }
 
         [HttpGet(Name = "GetTestAdService")]
@@ -29,41 +32,7 @@ namespace MssDevLab.TestAdService.Controllers
         public async Task<ActionResult<SearchCompletedEvent>> FetchAdsAsync([FromBody] SearchRequestedEvent requestData)
         {
             _logger.LogDebug($"TestAdService.TestAdServiceController.FetchAdsAsync called");
-            string? email = null;
-            if (requestData.UserPreferences != null)
-            {
-                // Do something if user authentificated
-                email = requestData.UserPreferences.Email;
-            }
-
-            // Prepare request to actual API
-
-            // Prepare response
-            var ret = new SearchCompletedEvent()
-            {
-                ItemsAmount = int.MaxValue,    // TODO: Retrieve items amount from underlying service
-                PageNumber = requestData.PageNumber,
-                PageSize = requestData.PageSize,
-                QueryString = requestData.QueryString,
-                ServiceType = ServiceType.AdService,
-                IsSuccesfull = true
-            };
-            var items = new List<ServiceData>();
-            for(int i = 0; i < requestData.PageSize; i++)
-            {
-                var data = new ServiceData
-                {
-                    Id = requestData.PageNumber.ToString() + i.ToString(),
-                    Type = ServiceType.AdService,
-                    Url = "http://www.mssdevlab.com",
-                    ImageUrl = "http://www.mssdevlab.com/img/birthdays.png",
-                    Title = $"TestAdService index:{i + 1} page:{requestData.PageNumber}",
-                    Description = $"Example of the advertisment. TestAdService email:'{email}' query:'{requestData.QueryString}'"
-
-                };
-                items.Add(data);
-            }
-            ret.Items = items.ToArray();
+            var ret = await _searchService.FetchAdsAsync(requestData);
 
             return Ok(await Task.FromResult(ret));
         }

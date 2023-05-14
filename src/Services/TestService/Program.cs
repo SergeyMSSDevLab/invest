@@ -40,7 +40,7 @@ namespace MssDevLab.TestService
                 app.UseSwaggerUI();
             }
 
-            app.UseAuthorization();
+            //app.UseAuthorization();
             app.UseEventBus();
 
             app.MapControllers();

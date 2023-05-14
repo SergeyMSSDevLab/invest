@@ -14,6 +14,7 @@ using RabbitMQ.Client.Exceptions;
 using System.Net.Sockets;
 using System.Text;
 using System.Text.Json;
+using static System.Formats.Asn1.AsnWriter;
 
 public class EventBusRabbitMQ : IEventBus, IDisposable
 {
@@ -261,9 +262,9 @@ public class EventBusRabbitMQ : IEventBus, IDisposable
 
         if (_subsManager.HasSubscriptionsForEvent(eventName))
         {
-            await using var scope = _serviceProvider.CreateAsyncScope();
+            await using AsyncServiceScope scope = _serviceProvider.CreateAsyncScope();
             var subscriptions = _subsManager.GetHandlersForEvent(eventName);
-            foreach (var subscription in subscriptions)
+            foreach (InMemoryEventBusSubscriptionsManager.SubscriptionInfo subscription in subscriptions)
             {
                 if (subscription.IsDynamic)
                 {
@@ -274,25 +275,16 @@ public class EventBusRabbitMQ : IEventBus, IDisposable
                 }
                 else
                 {
-                    var handler = scope.ServiceProvider.GetService(subscription.HandlerType);
-                    if (handler is null) continue;
-                    
-                    var eventType = _subsManager.GetEventTypeByName(eventName);
-                    if (eventType is null) continue;
-
-                    var integrationEvent = JsonSerializer.Deserialize(message, eventType, new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
-                    if (integrationEvent is null) continue;
-                    
-                    var concreteType = typeof(IIntegrationEventHandler<>).MakeGenericType(eventType);
-                    if (concreteType is null) continue;
-
-                    var method = concreteType.GetMethod("Handle");
-                    if (method is null) continue;
-
-                    if (method.Invoke(handler, new object[] { integrationEvent }) is not Task task) continue;
-
-                    await Task.Yield();
-                    await task;
+                    var task = GetExecutableTask(scope, subscription, eventName, message);
+                    if (task is null)
+                    {                        
+                        _logger.LogWarning("Handler not found for processing RabbitMQ event: {EventName}", eventName);
+                    }
+                    else
+                    {
+                        await Task.Yield();
+                        await task;
+                    }
                 }
             }
         }
@@ -300,5 +292,30 @@ public class EventBusRabbitMQ : IEventBus, IDisposable
         {
             _logger.LogWarning("No subscription for RabbitMQ event: {EventName}", eventName);
         }
+    }
+
+    private Task? GetExecutableTask(AsyncServiceScope scope, 
+        InMemoryEventBusSubscriptionsManager.SubscriptionInfo subscription, 
+        string eventName, 
+        string message)
+    {
+        var handler = scope.ServiceProvider.GetService(subscription.HandlerType);
+        if (handler is null) return null;
+
+        var eventType = _subsManager.GetEventTypeByName(eventName);
+        if (eventType is null) return null;
+
+        var integrationEvent = JsonSerializer.Deserialize(message, eventType, new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
+        if (integrationEvent is null) return null;
+
+        var concreteType = typeof(IIntegrationEventHandler<>).MakeGenericType(eventType);
+        if (concreteType is null) return null;
+
+        var method = concreteType.GetMethod("Handle");
+        if (method is null) return null;
+
+        if (method.Invoke(handler, new object[] { integrationEvent }) is not Task task) return null;
+        
+        return task;
     }
 }

@@ -1,7 +1,7 @@
 ﻿using MssDevLab.Common.Models;
 using MssDevLab.CommonCore.Interfaces.EventBus;
 
-namespace MssDevLab.TestService.Services
+namespace MssDevLab.TestAdService.Services
 {
     public class SearchRequestedEventHandler : IIntegrationEventHandler<SearchRequestedEvent>
     {
@@ -25,9 +25,9 @@ namespace MssDevLab.TestService.Services
                 @event.ConnectionId,
                 @event);
 
-            @event.PageSize = 2; // Just for debugging
+            @event.PageSize = 1; // Just for debugging
 
-            var searchRes = await _searchService.FetchDataAsync(@event);
+            var searchRes = await _searchService.FetchAdsAsync(@event);
             _notificationService.PublishSearchResult(searchRes);
         }
     }

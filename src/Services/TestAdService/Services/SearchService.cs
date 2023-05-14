@@ -44,7 +44,7 @@ namespace MssDevLab.TestAdService.Services
                     Url = "http://www.mssdevlab.com",
                     ImageUrl = "http://www.mssdevlab.com/img/birthdays.png",
                     Title = $"TestAdService index:{i + 1} page:{requestData.PageNumber}",
-                    Description = $"Example of the advertisment from provider. TestService email:'{email}' query:'{requestData.QueryString}'",
+                    Description = $"Example of the advertisment from provider. TestAdService email:'{email}' query:'{requestData.QueryString}'",
                     Relevance = i
                 };
                 items.Add(data);

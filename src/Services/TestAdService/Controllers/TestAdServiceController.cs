@@ -32,9 +32,7 @@ namespace MssDevLab.TestAdService.Controllers
         public async Task<ActionResult<SearchCompletedEvent>> FetchAdsAsync([FromBody] SearchRequestedEvent requestData)
         {
             _logger.LogDebug($"TestAdService.TestAdServiceController.FetchAdsAsync called");
-            var ret = await _searchService.FetchAdsAsync(requestData);
-
-            return Ok(await Task.FromResult(ret));
+            return Ok(await _searchService.FetchAdsAsync(requestData));
         }
     }
 }

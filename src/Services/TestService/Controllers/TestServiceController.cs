@@ -25,10 +25,7 @@ namespace MssDevLab.TestService.Controllers
         public async Task<ActionResult<SearchCompletedEvent>> FetchDataAsync([FromBody] SearchRequestedEvent requestData)
         {
             _logger.LogDebug($"TestService.TestServiceController.FetchDataAsync called");
-
-            var ret = await _searchService.FetchDataAsync(requestData);
-
-            return Ok(await Task.FromResult(ret));
+            return Ok(await _searchService.FetchDataAsync(requestData));
         }
     }
 }

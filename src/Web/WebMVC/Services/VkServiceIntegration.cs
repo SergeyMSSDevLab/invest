@@ -31,11 +31,11 @@ namespace MssDevLab.WebMVC.Services
             _logger.LogDebug("TestServiceIntegration instance created, base address: '{baseUrl}'", baseUrl);
         }
 
-        public async Task<ServiceResponse> FetchData(ServiceRequest request)
+        public async Task<SearchCompletedEvent> FetchData(SearchRequestedEvent request)
         {
             try
             {
-                var response = await PostAsync<ServiceRequest, ServiceResponse>("VkService/FetchData", request).ConfigureAwait(false);
+                var response = await PostAsync<SearchRequestedEvent, SearchCompletedEvent>("VkService/FetchData", request).ConfigureAwait(false);
                 if (response != null && response.IsSuccessCode && response.Result != null)
                 {
                     return response.Result;
@@ -46,7 +46,7 @@ namespace MssDevLab.WebMVC.Services
                 _logger.LogError(ex, "Error fetching data from path 'VkService/FetchData'");
             }
 
-            return new ServiceResponse
+            return new SearchCompletedEvent
             {
                 ServiceType = ServiceType.VkService,
                 QueryString = request.QueryString,

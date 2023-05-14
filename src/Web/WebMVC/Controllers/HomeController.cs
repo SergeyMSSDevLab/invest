@@ -33,9 +33,35 @@ namespace MssDevLab.WebMVC.Controllers
             _vkService = vkService;
         }
 
-        public async Task<IActionResult> Index(string? searchString)
+        public async Task<IActionResult> Index()
         {
-            var serviceRequest = new ServiceRequest
+            var serviceRequest = new SearchRequestedEvent
+            {
+                PageNumber = 1,
+                PageSize = 5,
+                QueryString = string.Empty,
+                UserPreferences = null
+            };
+
+            var userName = User?.Identity?.Name;
+            if (!string.IsNullOrWhiteSpace(userName))
+            {
+                serviceRequest.UserPreferences = new UserData { Email = userName };
+            }
+
+            var tasks = new List<Task<SearchCompletedEvent>>
+            {
+                _testAdService.FetchAds(serviceRequest),
+            };
+
+            SearchCompletedEvent[] completedTasks = await Task.WhenAll(tasks);   // TODO: consider to move try/catch from services to the controller
+
+            return View(BuildViewModel(completedTasks.Where(t => t.IsSuccesfull), string.Empty)); // TODO: process errors
+        }
+
+        public async Task<IActionResult> Search(string? searchString)
+        {
+            var serviceRequest = new SearchRequestedEvent
             {
                 PageNumber = 1,
                 PageSize = 5,
@@ -49,7 +75,7 @@ namespace MssDevLab.WebMVC.Controllers
                 serviceRequest.UserPreferences = new UserData { Email = userName };
             }
 
-            var tasks = new List<Task<ServiceResponse>>
+            var tasks = new List<Task<SearchCompletedEvent>>
             {
                 _testAdService.FetchAds(serviceRequest),
                 _testService.FetchData(serviceRequest),
@@ -57,14 +83,14 @@ namespace MssDevLab.WebMVC.Controllers
                 _vkService.FetchData(serviceRequest)
             };
 
-            ServiceResponse[] completedTasks = await Task.WhenAll(tasks);   // TODO: consider to move try/catch from services to the controller
+            SearchCompletedEvent[] completedTasks = await Task.WhenAll(tasks);   // TODO: consider to move try/catch from services to the controller
 
-            return View(BuildViewModel(completedTasks.Where(t => t.IsSuccesfull), searchString)); // TODO: process errors
+            return View("Search", BuildViewModel(completedTasks.Where(t => t.IsSuccesfull), searchString)); // TODO: process errors
         }
 
         private const int AdInsertDist = 3;
 
-        private HomeIndexViewModel BuildViewModel(IEnumerable<ServiceResponse> completedTasks, string? searchString)
+        private HomeIndexViewModel BuildViewModel(IEnumerable<SearchCompletedEvent> completedTasks, string? searchString)
         {
             var ads = completedTasks.Where(r => r.ServiceType == ServiceType.AdService).SelectMany(t => t.Items).ToArray();
             var viewModel = new HomeIndexViewModel(ads.Take(3));

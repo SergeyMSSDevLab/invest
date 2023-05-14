@@ -20,22 +20,22 @@ namespace MssDevLab.WebMVC.Services
 
             if (string.IsNullOrWhiteSpace(baseUrl))
             {
-                throw new ArgumentNullException(nameof(baseUrl));
+                throw new ApplicationException($"{baseUrl} is not specified");
             }
             if (!Uri.IsWellFormedUriString(baseUrl, UriKind.Absolute))
             {
-                throw new ArgumentException($"{baseUrl} is not a wellformed absolute uri");
+                throw new ApplicationException($"{baseUrl} is not wellformed absolute uri");
             }
 
             httpClient.BaseAddress = new Uri(baseUrl, UriKind.Absolute);
             _logger.LogDebug("TestService1Integration instance created, base address: '{baseUrl}'", baseUrl);
         }
 
-        public async Task<ServiceResponse> FetchData(ServiceRequest request)
+        public async Task<SearchCompletedEvent> FetchData(SearchRequestedEvent request)
         {
             try
             {
-                var response = await PostAsync<ServiceRequest, ServiceResponse>("TestService1/FetchData", request).ConfigureAwait(false);
+                var response = await PostAsync<SearchRequestedEvent, SearchCompletedEvent>("TestService1/FetchData", request).ConfigureAwait(false);
                 if (response != null && response.IsSuccessCode && response.Result != null)
                 {
                     return response.Result;
@@ -46,7 +46,7 @@ namespace MssDevLab.WebMVC.Services
                 _logger.LogError(ex, "Error fetching data from path 'TestService1/FetchData'");
             }
 
-            return new ServiceResponse
+            return new SearchCompletedEvent
             {
                 ServiceType = ServiceType.TestService1,
                 QueryString = request.QueryString,

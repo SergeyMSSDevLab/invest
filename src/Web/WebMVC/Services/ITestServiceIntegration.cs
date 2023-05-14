@@ -6,6 +6,6 @@ namespace MssDevLab.WebMVC.Services
 {
     public interface ITestServiceIntegration
     {
-        Task<ServiceResponse> FetchData(ServiceRequest request);
+        Task<SearchCompletedEvent> FetchData(SearchRequestedEvent request);
     }
 }

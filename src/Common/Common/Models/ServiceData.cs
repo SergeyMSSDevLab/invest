@@ -1,6 +1,6 @@
 namespace MssDevLab.Common.Models
 {
-    public class ServiceData
+    public record ServiceData
     {
         public string? Id { get; set; }
         public string? Title { get; set; }

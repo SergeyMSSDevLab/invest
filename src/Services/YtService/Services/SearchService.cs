@@ -1,15 +1,21 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Google.Apis.Services;
+using Google.Apis.YouTube.v3;
+using Microsoft.AspNetCore.Mvc;
 using MssDevLab.Common.Models;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace MssDevLab.YtService.Services
 {
     public class SearchService : ISearchService
     {
         private readonly ILogger<SearchService> _logger;
+        private readonly string _defaultApiKey;
 
-        public SearchService(ILogger<SearchService> logger)
+        public SearchService(ILogger<SearchService> logger, IConfiguration configuration)
         {
             _logger = logger;
+            _defaultApiKey = configuration["Secrets:Yt:DefaultApiKey"] ?? string.Empty;
+            _logger.LogDebug("YtService.SearchService.DefaultApiKey: {_defaultApiKey}", _defaultApiKey);
         }
 
         public async Task<SearchCompletedEvent> FetchDataAsync(SearchRequestedEvent requestData)
@@ -22,7 +28,55 @@ namespace MssDevLab.YtService.Services
                 email = requestData.UserPreferences.Email;
             }
 
-            // Prepare request to actual API
+            var items = new List<ServiceData>();
+            if (!string.IsNullOrWhiteSpace(requestData.QueryString) && !string.IsNullOrEmpty(_defaultApiKey))  // TODO: consider individual token
+            {
+                // Prepare request to actual API
+                var youtubeService = new YouTubeService(new BaseClientService.Initializer()
+                {
+                    ApiKey = _defaultApiKey,
+                    ApplicationName = "allsub.ru"
+                });
+                var searchListRequest = youtubeService.Search.List("snippet");
+                searchListRequest.Q = requestData.QueryString;
+                searchListRequest.MaxResults = requestData.PageSize;
+                searchListRequest.Type = "video";
+                searchListRequest.Order = SearchResource.ListRequest.OrderEnum.Relevance;
+
+                // Call the search.list method to retrieve results matching the specified query term.
+                var searchListResponse = await searchListRequest.ExecuteAsync();
+                // TODO: store the next page token with connection id for the next calls or pass it for client ????.
+                
+                List<string> videos = new List<string>();
+                List<string> channels = new List<string>();
+                List<string> playlists = new List<string>();
+                // Add each result to the appropriate list, and then display the lists of
+                // matching videos, channels, and playlists.
+                foreach (var item in searchListResponse.Items)
+                {
+                    switch (item.Id.Kind)
+                    {
+                        case "youtube#video":
+                            items.Add(new ServiceData
+                            {
+                                Id = item.Id.VideoId,
+                                Type = ServiceType.YtService,
+                                Url = $"https://www.youtube.com/watch?v={item.Id.VideoId}",
+                                ImageUrl = item.Snippet.Thumbnails.Default__.Url,
+                                Title = item.Snippet.Title,
+                                Description = item.Snippet.Description,
+                                Relevance = 5
+                            });
+                            break;
+                        case "youtube#channel":
+                            channels.Add(string.Format("{0} ({1})", item.Snippet.Title, item.Id.ChannelId));
+                            break;
+                        case "youtube#playlist":
+                            playlists.Add(string.Format("{0} ({1})", item.Snippet.Title, item.Id.PlaylistId));
+                            break;
+                    }
+                }
+            }
 
             // Prepare response
             var ret = new SearchCompletedEvent()
@@ -31,28 +85,13 @@ namespace MssDevLab.YtService.Services
                 PageNumber = requestData.PageNumber,
                 PageSize = requestData.PageSize,
                 QueryString = requestData.QueryString,
-                ServiceType = ServiceType.YtService,
+                ServiceType = ServiceType.VkService,
                 IsSuccesfull = true,
-                ConnectionId = requestData.ConnectionId
+                ConnectionId = requestData.ConnectionId,
+                Items = items.ToArray()
             };
-            var items = new List<ServiceData>();
-            for (int i = 0; i < ret.PageSize; i++)
-            {
-                var data = new ServiceData
-                {
-                    Id = requestData.PageNumber.ToString() + i.ToString(),
-                    Type = ServiceType.YtService,
-                    Url = "http://www.mssdevlab.com",
-                    ImageUrl = "http://www.mssdevlab.com/img/zoom.png",
-                    Title = $"YtService index:{i + 1} page:{requestData.PageNumber}",
-                    Description = $"Example of the data from provider. YtService email:'{email}' query:'{requestData.QueryString}'",
-                    Relevance = i
-                };
-                items.Add(data);
-            }
-            ret.Items = items.ToArray();
 
-            return await Task.FromResult(ret);
+            return ret;
         }
     }
 }

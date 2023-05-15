@@ -19,6 +19,7 @@ namespace MssDevLab.YtService
         {
             var builder = WebApplication.CreateBuilder(args);
             builder.Host.ConfigureElasticSerilog("YtService");
+            builder.Configuration.AddJsonFile("/run/secrets/app_secret");
 
             // Add services to the container.
 

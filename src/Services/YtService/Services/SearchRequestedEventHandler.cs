@@ -25,8 +25,6 @@ namespace MssDevLab.YtService.Services
                 @event.ConnectionId,
                 @event);
 
-            @event.PageSize = 2; // Just for debugging
-
             var searchRes = await _searchService.FetchDataAsync(@event);
             _notificationService.PublishSearchResult(searchRes);
         }

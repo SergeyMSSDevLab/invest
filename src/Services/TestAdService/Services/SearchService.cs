@@ -35,6 +35,12 @@ namespace MssDevLab.TestAdService.Services
                 ConnectionId = requestData.ConnectionId
             };
             var items = new List<ServiceData>();
+            var images = new string[] {
+                "http://www.mssdevlab.com/img/birthdays.png",
+                "http://www.mssdevlab.com/img/zoom.png",
+                "http://www.mssdevlab.com/img/visa.png"
+            };
+            var curImage = 0;
             for (int i = 0; i < ret.PageSize; i++)
             {
                 var data = new ServiceData
@@ -42,12 +48,16 @@ namespace MssDevLab.TestAdService.Services
                     Id = requestData.PageNumber.ToString() + i.ToString(),
                     Type = ServiceType.AdService,
                     Url = "http://www.mssdevlab.com",
-                    ImageUrl = "http://www.mssdevlab.com/img/birthdays.png",
+                    ImageUrl = images[curImage++],
                     Title = $"TestAdService index:{i + 1} page:{requestData.PageNumber}",
                     Description = $"Example of the advertisment from provider. TestAdService email:'{email}' query:'{requestData.QueryString}'",
                     Relevance = i
                 };
                 items.Add(data);
+                if (curImage > 2)
+                {
+                    curImage = 0;
+                }
             }
             ret.Items = items.ToArray();
 

@@ -1,7 +1,7 @@
 ﻿using MssDevLab.Common.Models;
 using MssDevLab.CommonCore.Interfaces.EventBus;
 
-namespace MssDevLab.TestService.Services
+namespace MssDevLab.YtService.Services
 {
     public class SearchRequestedEventHandler : IIntegrationEventHandler<SearchRequestedEvent>
     {

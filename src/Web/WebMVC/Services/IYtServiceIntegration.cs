@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace MssDevLab.WebMVC.Services
 {
-    public interface ITestService1Integration
+    public interface IYtServiceIntegration
     {
         Task<SearchCompletedEvent> FetchData(SearchRequestedEvent request);
     }

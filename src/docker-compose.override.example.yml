@@ -17,15 +17,6 @@ services:
       - "15672:15672"
       - "5672:5672"
 
-  mssproto-sqldb:
-    environment:
-      - SA_PASSWORD=Pass@word
-      - ACCEPT_EULA=Y
-    ports:
-      - "1433:1433"
-    volumes:
-      - mssproto-sqldata:/var/opt/mssql
-
   mssproto-fe:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
@@ -37,8 +28,6 @@ services:
     ports:
       - "80:80"
       - "443:443"
-    depends_on:  
-      - mssproto-sqldb
 
   mssproto-vk-service:
     environment:
@@ -51,7 +40,7 @@ services:
     ports:
       - "6081:80"
 
-  mssproto-test-service:
+  mssproto-yt-service:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://0.0.0.0:80
@@ -61,17 +50,6 @@ services:
       - UseLoadTest=${USE_LOADTEST:-False}
     ports:
       - "6091:80"
-
-  mssproto-test-service1:
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_URLS=http://0.0.0.0:80
-      - UseCustomizationData=True
-      - ApplicationInsights__InstrumentationKey=${INSTRUMENTATION_KEY}
-      - OrchestratorType=${ORCHESTRATOR_TYPE}
-      - UseLoadTest=${USE_LOADTEST:-False}
-    ports:
-      - "6092:80"
 
   mssproto-test-ad-service:
     environment:
@@ -83,7 +61,3 @@ services:
       - UseLoadTest=${USE_LOADTEST:-False}
     ports:
       - "6093:80"
-
-volumes:
-  mssproto-sqldata:
-    external: false

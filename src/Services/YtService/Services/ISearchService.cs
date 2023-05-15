@@ -1,6 +1,6 @@
 ﻿using MssDevLab.Common.Models;
 
-namespace MssDevLab.TestService.Services
+namespace MssDevLab.YtService.Services
 {
     public interface ISearchService
     {

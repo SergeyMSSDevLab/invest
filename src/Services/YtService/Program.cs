@@ -9,16 +9,16 @@ using Microsoft.AspNetCore.Connections;
 using MssDevLab.CommonCore.Services;
 using MssDevLab.EventBusRabbitMQ;
 using RabbitMQ.Client;
-using MssDevLab.TestService.Services;
+using MssDevLab.YtService.Services;
 
-namespace MssDevLab.TestService
+namespace MssDevLab.YtService
 {
     public static class Program
     {
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
-            builder.Host.ConfigureElasticSerilog("TestService");
+            builder.Host.ConfigureElasticSerilog("YtService");
 
             // Add services to the container.
 

@@ -16,21 +16,18 @@ namespace MssDevLab.WebMVC.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly ITestAdServiceIntegration _testAdService;
-        private readonly ITestServiceIntegration _testService;
-        private readonly ITestService1Integration _testService1;
+        private readonly IYtServiceIntegration _ytServiceIntegration;
         private readonly IVkServiceIntegration _vkService;
 
         public HomeController(ILogger<HomeController> logger, 
-            ITestAdServiceIntegration testAdService, 
-            ITestServiceIntegration testService,
-            IVkServiceIntegration vkService,
-            ITestService1Integration testService1)
+            ITestAdServiceIntegration testAdService,
+            IYtServiceIntegration ytServiceIntegration,
+            IVkServiceIntegration vkService)
         {
             _logger = logger;
             _testAdService = testAdService;
-            _testService = testService;
-            _testService1 = testService1;
             _vkService = vkService;
+            _ytServiceIntegration = ytServiceIntegration;
         }
 
         public async Task<IActionResult> Index()
@@ -78,8 +75,7 @@ namespace MssDevLab.WebMVC.Controllers
             var tasks = new List<Task<SearchCompletedEvent>>
             {
                 _testAdService.FetchAds(serviceRequest),
-                _testService.FetchData(serviceRequest),
-                _testService1.FetchData(serviceRequest),
+                _ytServiceIntegration.FetchData(serviceRequest),
                 _vkService.FetchData(serviceRequest)
             };
 

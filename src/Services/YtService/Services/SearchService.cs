@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MssDevLab.Common.Models;
 
-namespace MssDevLab.TestService.Services
+namespace MssDevLab.YtService.Services
 {
     public class SearchService : ISearchService
     {
@@ -14,7 +14,7 @@ namespace MssDevLab.TestService.Services
 
         public async Task<SearchCompletedEvent> FetchDataAsync(SearchRequestedEvent requestData)
         {
-            _logger.LogDebug($"TestService.SearchService.FetchDataAsync called");
+            _logger.LogDebug($"YtService.SearchService.FetchDataAsync called");
             string? email = null;
             if (requestData.UserPreferences != null)
             {
@@ -31,7 +31,7 @@ namespace MssDevLab.TestService.Services
                 PageNumber = requestData.PageNumber,
                 PageSize = requestData.PageSize,
                 QueryString = requestData.QueryString,
-                ServiceType = ServiceType.TestService,
+                ServiceType = ServiceType.YtService,
                 IsSuccesfull = true,
                 ConnectionId = requestData.ConnectionId
             };
@@ -41,11 +41,11 @@ namespace MssDevLab.TestService.Services
                 var data = new ServiceData
                 {
                     Id = requestData.PageNumber.ToString() + i.ToString(),
-                    Type = ServiceType.TestService,
+                    Type = ServiceType.YtService,
                     Url = "http://www.mssdevlab.com",
                     ImageUrl = "http://www.mssdevlab.com/img/zoom.png",
-                    Title = $"TestService index:{i + 1} page:{requestData.PageNumber}",
-                    Description = $"Example of the data from provider. TestService email:'{email}' query:'{requestData.QueryString}'",
+                    Title = $"YtService index:{i + 1} page:{requestData.PageNumber}",
+                    Description = $"Example of the data from provider. YtService email:'{email}' query:'{requestData.QueryString}'",
                     Relevance = i
                 };
                 items.Add(data);

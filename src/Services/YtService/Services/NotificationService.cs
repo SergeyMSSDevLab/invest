@@ -3,7 +3,7 @@ using MssDevLab.Common.Models;
 using MssDevLab.CommonCore.Interfaces.EventBus;
 using MssDevLab.CommonCore.Models;
 
-namespace MssDevLab.TestService.Services
+namespace MssDevLab.YtService.Services
 {
     public class NotificationService : INotificationService
     {

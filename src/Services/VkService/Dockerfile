@@ -15,8 +15,7 @@ COPY "Common/Common/Common.csproj" "Common/Common/Common.csproj"
 COPY "Common/CommonCore/CommonCore.csproj" "Common/CommonCore/CommonCore.csproj"
 COPY "Web/WebMVC/WebMVC.csproj" "Web/WebMVC/WebMVC.csproj"
 COPY ["Services/TestAdService/TestAdService.csproj", "Services/TestAdService/TestAdService.csproj"]
-COPY ["Services/TestService/TestService.csproj", "Services/TestService/TestService.csproj"]
-COPY ["Services/TestService1/TestService1.csproj", "Services/TestService1/TestService1.csproj"]
+COPY ["Services/YtService/YtService.csproj", "Services/YtService/YtService.csproj"]
 COPY ["Services/VkService/VkService.csproj", "Services/VkService/VkService.csproj"]
 
 COPY "docker-compose.dcproj" "docker-compose.dcproj"

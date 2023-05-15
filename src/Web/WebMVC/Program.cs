@@ -92,8 +92,7 @@ namespace MssDevLab.WebMVC
         private static void AddServices(WebApplicationBuilder builder)
         {
             builder.Services.AddHttpClient<IVkServiceIntegration, VkServiceIntegration>();
-            builder.Services.AddHttpClient<ITestServiceIntegration, TestServiceIntegration>();
-            builder.Services.AddHttpClient<ITestService1Integration, TestService1Integration>();
+            builder.Services.AddHttpClient<IYtServiceIntegration, YtServiceIntegration>();
             builder.Services.AddHttpClient<ITestAdServiceIntegration, TestAdServiceIntegration>();
 
             builder.Services.AddTransient<INotificationService,  NotificationService>();

@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using MssDevLab.Common.Models;
-using MssDevLab.TestService.Services;
+using MssDevLab.YtService.Services;
 using Serilog;
 using System.Net;
 
@@ -8,12 +8,12 @@ namespace MssDevLab.TestService.Controllers
 {
     [ApiController]
     [Route("[controller]/[action]")]
-    public class TestServiceController : ControllerBase
+    public class YtServiceController : ControllerBase
     {
-        private readonly ILogger<TestServiceController> _logger;
+        private readonly ILogger<YtServiceController> _logger;
         private readonly ISearchService _searchService;
 
-        public TestServiceController(ILogger<TestServiceController> logger, 
+        public YtServiceController(ILogger<YtServiceController> logger, 
             ISearchService searchService)
         {
             _logger = logger;
@@ -24,7 +24,7 @@ namespace MssDevLab.TestService.Controllers
         [ProducesResponseType(typeof(SearchCompletedEvent), (int)HttpStatusCode.OK)]
         public async Task<ActionResult<SearchCompletedEvent>> FetchDataAsync([FromBody] SearchRequestedEvent requestData)
         {
-            _logger.LogDebug($"TestService.TestServiceController.FetchDataAsync called");
+            _logger.LogDebug($"YtService.YtServiceController.FetchDataAsync called");
             return Ok(await _searchService.FetchDataAsync(requestData));
         }
     }

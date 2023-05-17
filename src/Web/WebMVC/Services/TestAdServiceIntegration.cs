@@ -56,7 +56,6 @@ namespace MssDevLab.WebMVC.Services
                 { 
                     ServiceType = ServiceType.AdService,
                     QueryString = request.QueryString,
-                    PageNumber = request.PageNumber,
                     PageSize = request.PageSize,
                     ItemsAmount = 0,
                     Items = Array.Empty<ServiceData>(),

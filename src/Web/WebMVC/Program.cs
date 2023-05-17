@@ -94,6 +94,7 @@ namespace MssDevLab.WebMVC
             builder.Services.AddHttpClient<IYtServiceIntegration, YtServiceIntegration>();
             builder.Services.AddHttpClient<ITestAdServiceIntegration, TestAdServiceIntegration>();
 
+            builder.Services.AddTransient<INotificationCache, NotificationCache>();
             builder.Services.AddTransient<INotificationService,  NotificationService>();
         }
 

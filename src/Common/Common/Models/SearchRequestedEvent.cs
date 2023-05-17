@@ -11,7 +11,7 @@ namespace MssDevLab.Common.Models
     {
         public string? ConnectionId { get; set; }
         public string? QueryString { get; set; }
-        public int PageNumber { get; set; }
+        public bool OnlySubscriptions { get; set; }
         public int PageSize { get; set; } = 10;
 
         public UserData? UserPreferences { get; set; }

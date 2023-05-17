@@ -4,7 +4,6 @@ var connection = new signalR.HubConnectionBuilder()
     .withUrl("/searchHub")
     .withAutomaticReconnect()
     .build();
-var pageNumber = 0;
 
 //Disable the send button until connection is established.
 document.getElementById("sendButton").disabled = true;
@@ -37,8 +36,13 @@ connection.start().then(function () {
 
 document.getElementById("sendButton").addEventListener("click", function (event) {
     var message = document.getElementById("messageInput").value;
+    var useSubs = false;
+    var useSubsCheckBox = document.getElementById("usesub");
+    if (useSubsCheckBox) {
+        useSubs = useSubsCheckBox.checked;
+    }
 
-    connection.invoke("Search", message, ++pageNumber).catch(function (err) {
+    connection.invoke("Search", message, useSubs).catch(function (err) {
         return console.error(err.toString());
     });
     event.preventDefault();

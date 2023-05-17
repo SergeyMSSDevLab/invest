@@ -3,11 +3,14 @@ using MssDevLab.Common.Models;
 using VkNet.Model.RequestParams;
 using VkNet.Model;
 using VkNet;
+using Microsoft.AspNetCore.DataProtection.KeyManagement;
 
 namespace MssDevLab.VkService.Services
 {
     public class SearchService : ISearchService
     {
+        private const string PAGENUM_KEY = "VkService.PageNum";
+
         private readonly ILogger<SearchService> _logger;
         private readonly string _defaultAccessToken;
 
@@ -29,6 +32,7 @@ namespace MssDevLab.VkService.Services
             }
 
             var items = new List<ServiceData>();
+            int pageNum = 1;
             if (!string.IsNullOrWhiteSpace(requestData.QueryString) && !string.IsNullOrEmpty(_defaultAccessToken))  // TODO: consider individual token
             {
                 // Prepare request to actual API
@@ -40,9 +44,17 @@ namespace MssDevLab.VkService.Services
                 });
 
                 var offset = 0;
-                if (requestData.PageNumber > 1) 
-                { 
-                    offset = (requestData.PageNumber - 1) * requestData.PageSize;
+                if (requestData.DataDictionary.TryGetValue(PAGENUM_KEY, out string? strPageNum))
+                {
+                    if (!int.TryParse(strPageNum, out pageNum))
+                    {
+                        pageNum = 1;
+                    }
+                }
+
+                if (pageNum > 1)
+                {
+                    offset = (pageNum - 1) * requestData.PageSize;
                 }
 
                 var req = new VideoSearchParams()
@@ -75,8 +87,6 @@ namespace MssDevLab.VkService.Services
             // Prepare response
             var ret = new SearchCompletedEvent()
             {
-                ItemsAmount = int.MaxValue,    // TODO: Retrieve items amount from underlying service
-                PageNumber = requestData.PageNumber,
                 PageSize = requestData.PageSize,
                 QueryString = requestData.QueryString,
                 ServiceType = ServiceType.VkService,
@@ -84,6 +94,16 @@ namespace MssDevLab.VkService.Services
                 ConnectionId = requestData.ConnectionId,
                 Items = items.ToArray()
             };
+
+            var newPageNum = (++pageNum).ToString();
+            if (ret.DataDictionary.ContainsKey(PAGENUM_KEY))
+            {
+                ret.DataDictionary[PAGENUM_KEY] = newPageNum;
+            }
+            else
+            {
+                ret.DataDictionary.Add(PAGENUM_KEY, newPageNum);
+            }
 
             return ret;
         }

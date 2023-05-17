@@ -13,13 +13,15 @@ namespace MssDevLab.CommonCore.Models
         {
             Id = Guid.NewGuid();
             CreationDate = DateTime.UtcNow;
+            DataDictionary = new Dictionary<string, string>();
         }
 
         [JsonConstructor]
-        public IntegrationEvent(Guid id, DateTime createDate)
+        public IntegrationEvent(Guid id, DateTime createDate, Dictionary<string, string> dataDictionary)
         {
             Id = id;
             CreationDate = createDate;
+            DataDictionary = dataDictionary;
         }
 
         [JsonInclude]
@@ -27,5 +29,8 @@ namespace MssDevLab.CommonCore.Models
 
         [JsonInclude]
         public DateTime CreationDate { get; private init; }
+
+        [JsonInclude]
+        public IDictionary<string, string> DataDictionary { get; set; }
     }
 }

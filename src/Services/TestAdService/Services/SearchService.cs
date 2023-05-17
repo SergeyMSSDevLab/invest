@@ -27,7 +27,7 @@ namespace MssDevLab.TestAdService.Services
             var ret = new SearchCompletedEvent()
             {
                 ItemsAmount = int.MaxValue,    // TODO: Retrieve items amount from underlying service
-                PageNumber = requestData.PageNumber,
+                // TODO: PageNumber = requestData.PageNumber,
                 PageSize = requestData.PageSize,
                 QueryString = requestData.QueryString,
                 ServiceType = ServiceType.AdService,
@@ -45,11 +45,11 @@ namespace MssDevLab.TestAdService.Services
             {
                 var data = new ServiceData
                 {
-                    Id = requestData.PageNumber.ToString() + i.ToString(),
+                    Id = i.ToString(),
                     Type = ServiceType.AdService,
                     Url = "http://www.mssdevlab.com",
                     ImageUrl = images[curImage++],
-                    Title = $"TestAdService index:{i + 1} page:{requestData.PageNumber}",
+                    Title = $"TestAdService index:{i + 1}",
                     Description = $"Example of the advertisment from provider. TestAdService email:'{email}' query:'{requestData.QueryString}'",
                     Relevance = i
                 };

@@ -16,7 +16,6 @@ namespace MssDevLab.Common.Models
         }
         public ServiceData[] Items { get; set; }
         public string? QueryString { get; set; }
-        public int PageNumber { get; set; }
         public int PageSize { get; set; }
         public int? ItemsAmount { get; set; }
         public ServiceType ServiceType { get; set; }

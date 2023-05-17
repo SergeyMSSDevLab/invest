@@ -9,5 +9,7 @@ namespace MssDevLab.WebMVC.Services
         void StartSearch(SearchRequestedEvent request);
 
         Task SearchCompletedAsync(SearchCompletedEvent eventData);
+
+        void ClearConnectionData(string connectionId);
     }
 }

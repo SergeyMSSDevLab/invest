@@ -34,7 +34,6 @@ namespace MssDevLab.WebMVC.Controllers
         {
             var serviceRequest = new SearchRequestedEvent
             {
-                PageNumber = 1,
                 PageSize = 5,
                 QueryString = string.Empty,
                 UserPreferences = null
@@ -60,7 +59,6 @@ namespace MssDevLab.WebMVC.Controllers
         {
             var serviceRequest = new SearchRequestedEvent
             {
-                PageNumber = 1,
                 PageSize = 5,
                 QueryString = searchString ?? string.Empty,
                 UserPreferences = null

@@ -13,6 +13,7 @@ COPY "mssproto.sln" "mssproto.sln"
 
 COPY "Common/Common/Common.csproj" "Common/Common/Common.csproj"
 COPY "Common/CommonCore/CommonCore.csproj" "Common/CommonCore/CommonCore.csproj"
+COPY "Common/EventBusRabbitMQ/EventBusRabbitMQ.csproj" "Common/EventBusRabbitMQ/EventBusRabbitMQ.csproj"
 COPY "Web/WebMVC/WebMVC.csproj" "Web/WebMVC/WebMVC.csproj"
 COPY ["Services/TestAdService/TestAdService.csproj", "Services/TestAdService/TestAdService.csproj"]
 COPY ["Services/YtService/YtService.csproj", "Services/YtService/YtService.csproj"]
@@ -21,7 +22,6 @@ COPY ["Services/VkService/VkService.csproj", "Services/VkService/VkService.cspro
 COPY "docker-compose.dcproj" "docker-compose.dcproj"
 
 RUN dotnet restore "mssproto.sln"
-
 
 COPY . .
 WORKDIR /src/Services/TestAdService

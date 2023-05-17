@@ -29,7 +29,6 @@ namespace MssDevLab.WebMVC
             var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlite(connectionString));
-            builder.Configuration.AddJsonFile("/run/secrets/app_secret");
 
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
             builder.Services.AddSignalR();

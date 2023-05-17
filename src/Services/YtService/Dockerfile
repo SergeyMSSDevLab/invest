@@ -13,6 +13,7 @@ COPY "mssproto.sln" "mssproto.sln"
 
 COPY "Common/Common/Common.csproj" "Common/Common/Common.csproj"
 COPY "Common/CommonCore/CommonCore.csproj" "Common/CommonCore/CommonCore.csproj"
+COPY "Common/EventBusRabbitMQ/EventBusRabbitMQ.csproj" "Common/EventBusRabbitMQ/EventBusRabbitMQ.csproj"
 COPY "Web/WebMVC/WebMVC.csproj" "Web/WebMVC/WebMVC.csproj"
 COPY ["Services/TestAdService/TestAdService.csproj", "Services/TestAdService/TestAdService.csproj"]
 COPY ["Services/YtService/YtService.csproj", "Services/YtService/YtService.csproj"]
@@ -31,4 +32,5 @@ FROM build AS publish
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app .
+COPY --from=publish /src/appsecrets.json /app/appsecrets.json
 ENTRYPOINT ["dotnet", "YtService.dll"]

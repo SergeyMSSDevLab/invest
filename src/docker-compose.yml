@@ -16,8 +16,6 @@ services:
     build:
       context: .
       dockerfile: Web/WebMVC/Dockerfile
-    secrets:
-      - app_secret
     volumes:
       - mssproto-usersdata:/appdata
     depends_on:
@@ -29,8 +27,6 @@ services:
     build:
       context: .
       dockerfile: Services/VkService/Dockerfile
-    secrets:
-      - app_secret
     depends_on:
       - mssproto-rabbitmq
 
@@ -40,8 +36,6 @@ services:
     build:
       context: .
       dockerfile: Services/YtService/Dockerfile
-    secrets:
-      - app_secret
     depends_on:
       - mssproto-rabbitmq
 
@@ -57,7 +51,3 @@ services:
 volumes:
   mssproto-usersdata:
     external: false
-
-secrets:
-  app_secret:
-    file: appsecrets.json

@@ -15,7 +15,15 @@ namespace MssDevLab.VkService
         {
             var builder = WebApplication.CreateBuilder(args);
             builder.Host.ConfigureElasticSerilog("VkService");
-            builder.Configuration.AddJsonFile("/run/secrets/app_secret");
+            // Attempt to avoid the secrets issue
+            try
+            {
+                builder.Configuration.AddJsonFile("/app/appsecrets.json");  // TODO: refactor
+            }
+            catch
+            {
+                builder.Configuration.AddJsonFile("/src/appsecrets.json");  // TODO: refactor
+            }
 
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
